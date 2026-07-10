@@ -1,0 +1,49 @@
+[gd_scene format=4 uid="uid://cvngvjaq0p52k"]
+
+[ext_resource type="Texture2D" uid="uid://cmiyama1wsi0q" path="res://sprites/fulltile.png" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://rucmtwgikfjl" path="res://sprites/emptytile.png" id="2_h2yge"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0xm2m"]
+texture = ExtResource("1_0xm2m")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/terrain_set = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h2yge"]
+texture = ExtResource("2_h2yge")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ry7xg"]
+tile_size = Vector2i(64, 64)
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "Terrain 0"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+sources/0 = SubResource("TileSetAtlasSource_0xm2m")
+sources/1 = SubResource("TileSetAtlasSource_h2yge")
+
+[sub_resource type="GDScript" id="GDScript_1bvp3"]
+script/source = "extends TileMapLayer
+
+
+var GridSize = 4
+var Dic = {}
+
+"
+
+[node name="Main" type="Node2D" unique_id=906222005]
+
+[node name="fulltile" type="TileMapLayer" parent="." unique_id=290809916]
+z_index = 1
+tile_map_data = PackedByteArray("AAAAAP//AAAAAAAAAAD/////AAAAAAAAAAD+/wAAAAAAAAAAAAD9/wAAAAAAAAAAAAD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_ry7xg")
+script = SubResource("GDScript_1bvp3")
+
+[node name="emptytile" type="TileMapLayer" parent="." unique_id=146475248]
+tile_map_data = PackedByteArray("AAD9/wAAAQAAAAAAAAD+/wAAAQAAAAAAAAD//wAAAQAAAAAAAAAAAAAAAQAAAAAAAAAAAP//AQAAAAAAAAD/////AQAAAAAAAAA=")
+tile_set = SubResource("TileSet_ry7xg")
+script = SubResource("GDScript_1bvp3")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=807470146]
+position = Vector2(0, 40)
+zoom = Vector2(0.9, 0.9)

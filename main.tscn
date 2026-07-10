@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://cvngvjaq0p52k"]
+
+[ext_resource type="Texture2D" uid="uid://cmiyama1wsi0q" path="res://sprites/fulltile.png" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://dwrktvhwsq6kb" path="res://scripts/main.gd" id="1_272bh"]
+[ext_resource type="Texture2D" uid="uid://rucmtwgikfjl" path="res://sprites/emptytile.png" id="2_h2yge"]
+[ext_resource type="Texture2D" uid="uid://cq5v2mbcyu725" path="res://sprites/selectile.png" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://cvvnk2ln4ql7u" path="res://scripts/fulltile.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://cnlyxalqa4x60" path="res://scripts/emptytile.gd" id="5_7mycd"]
+[ext_resource type="Script" uid="uid://coe7ghnl0jm1r" path="res://scripts/selecttile.gd" id="6_272bh"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0xm2m"]
+texture = ExtResource("1_0xm2m")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+0:0/0/terrain_set = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_h2yge"]
+texture = ExtResource("2_h2yge")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1bvp3"]
+texture = ExtResource("3_h2yge")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_ry7xg"]
+tile_size = Vector2i(64, 64)
+terrain_set_0/mode = 0
+terrain_set_0/terrain_0/name = "Terrain 0"
+terrain_set_0/terrain_0/color = Color(0.5, 0.34375, 0.25, 1)
+sources/0 = SubResource("TileSetAtlasSource_0xm2m")
+sources/1 = SubResource("TileSetAtlasSource_h2yge")
+sources/2 = SubResource("TileSetAtlasSource_1bvp3")
+
+[node name="Main" type="Node2D" unique_id=906222005]
+script = ExtResource("1_272bh")
+
+[node name="fulltile" type="TileMapLayer" parent="." unique_id=290809916]
+tile_set = SubResource("TileSet_ry7xg")
+script = ExtResource("4_1bvp3")
+
+[node name="emptytile" type="TileMapLayer" parent="." unique_id=146475248]
+z_index = 1
+tile_set = SubResource("TileSet_ry7xg")
+script = ExtResource("5_7mycd")
+
+[node name="selecttile" type="TileMapLayer" parent="." unique_id=1649995034]
+z_index = 2
+tile_set = SubResource("TileSet_ry7xg")
+script = ExtResource("6_272bh")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=807470146]
+position = Vector2(640, 361)
+zoom = Vector2(0.9, 0.9)
