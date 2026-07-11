@@ -8,4 +8,4 @@ func pintar_random():
 
 	set_cell(cell, 2, Vector2i.ZERO)
 
-	print("SelectTile ejecutado: (", cell.x+1,", ", cell.y+1,")")
+	print("Casilla coloreada: (", cell.x+1,", ", cell.y+1,")")

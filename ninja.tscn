@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://cmfu48736dsfr"]
+
+[ext_resource type="Script" uid="uid://74t8i2veeq72" path="res://scripts/ninja.gd" id="1_25rb4"]
+[ext_resource type="Texture2D" uid="uid://v6jbxdpbi80y" path="res://sprites/ninja.png" id="1_buaqa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ry7xg"]
+size = Vector2(39, 40)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_25rb4"]
+atlas = ExtResource("1_buaqa")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lbaip"]
+atlas = ExtResource("1_buaqa")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bvjue"]
+atlas = ExtResource("1_buaqa")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wyeb1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_25rb4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lbaip")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bvjue")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Ninja" type="Node2D" unique_id=288799154]
+script = ExtResource("1_25rb4")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=20295834]
+texture_filter = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1922828102]
+shape = SubResource("RectangleShape2D_ry7xg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1370418392]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_wyeb1")
