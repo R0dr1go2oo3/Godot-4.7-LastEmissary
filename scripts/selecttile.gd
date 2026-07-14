@@ -2,7 +2,7 @@ extends TileMapLayer
 
 func pintar_random():
 	var cell := Vector2i(
-		randi_range(0, 19),
+		randi_range(0, 24),
 		randi_range(0, 9)
 	)
 

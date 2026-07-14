@@ -31,7 +31,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_niwi4")
 }],
 "loop": 1,
-"name": &"default",
+"name": &"staticSumo",
 "speed": 5.0
 }]
 
@@ -47,3 +47,5 @@ shape = SubResource("CircleShape2D_ry7xg")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1097677537]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wyeb1")
+animation = &"staticSumo"
+autoplay = "staticSumo"

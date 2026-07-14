@@ -1,8 +1,12 @@
-extends Node
+extends Node2D
 
-@onready var full_tile: TileMapLayer = $scenarios/fulltile
-@onready var empty_tile: TileMapLayer = $scenarios/emptytile
-@onready var select_tile: TileMapLayer = $scenarios/selecttile
+@onready var full_tile: TileMapLayer = $scenarios/fullTile
+@onready var empty_tile: TileMapLayer = $scenarios/emptyTile
+@onready var select_tile: TileMapLayer = $scenarios/selectTile
+
+@onready var paladin = $characters/Paladin
+
+var selected_character = null
 
 var spawn_cells := [
 	Vector2i(0, 0),
@@ -15,21 +19,41 @@ func _ready():
 
 	randomize()
 
-	# Crear el tablero
 	full_tile.crear_tablero()
 
-	# El EmptyTile toma como referencia el tablero
 	empty_tile.base_layer = full_tile
-
-	# select_tile también usa el tablero
-	# select_tile.base_layer = full_tile
 
 	select_tile.pintar_random()
 
-	# Posiciones iniciales aleatorias de los personajes
 	spawn_cells.shuffle()
 
-	$characters/ninja.spawn(spawn_cells[0], full_tile)
-	$characters/paladin.spawn(spawn_cells[1], full_tile)
-	$characters/sumo.spawn(spawn_cells[2], full_tile)
-	$characters/robot.spawn(spawn_cells[3], full_tile)
+	$characters/Ninja.spawn(spawn_cells[0], full_tile)
+	paladin.spawn(spawn_cells[1], full_tile)
+	$characters/Sumo.spawn(spawn_cells[2], full_tile)
+	$characters/Robot.spawn(spawn_cells[3], full_tile)
+
+
+func _unhandled_input(event):
+
+	if event is InputEventMouseButton \
+	and event.button_index == MOUSE_BUTTON_LEFT \
+	and event.pressed:
+
+		var mouse_global = full_tile.get_global_mouse_position()
+		var mouse_local = full_tile.to_local(mouse_global)
+		var cell = full_tile.local_to_map(mouse_local)
+
+		# Seleccionar el paladín
+		if selected_character == null:
+
+			if cell == paladin.current_cell:
+				selected_character = paladin
+				paladin.selected = true
+				print("Paladín seleccionado")
+
+		# Mover el paladín
+		else:
+
+			selected_character.move_to(cell)
+			selected_character.selected = false
+			selected_character = null

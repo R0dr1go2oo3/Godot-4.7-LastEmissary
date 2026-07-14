@@ -32,7 +32,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_lfpmk")
 }],
 "loop": 1,
-"name": &"default",
+"name": &"staticPaladiin",
 "speed": 5.0
 }]
 
@@ -41,6 +41,7 @@ texture_filter = 1
 script = ExtResource("1_hn4rh")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=517448268]
+texture_filter = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=2123742865]
 shape = SubResource("CapsuleShape2D_xj23c")
@@ -48,3 +49,5 @@ shape = SubResource("CapsuleShape2D_xj23c")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1477382752]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wyeb1")
+animation = &"staticPaladiin"
+autoplay = "staticPaladiin"

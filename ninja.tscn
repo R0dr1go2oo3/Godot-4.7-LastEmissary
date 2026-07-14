@@ -31,7 +31,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_bvjue")
 }],
 "loop": 1,
-"name": &"default",
+"name": &"staticNinja",
 "speed": 5.0
 }]
 
@@ -47,3 +47,5 @@ shape = SubResource("RectangleShape2D_ry7xg")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1370418392]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_wyeb1")
+animation = &"staticNinja"
+autoplay = "staticNinja"
