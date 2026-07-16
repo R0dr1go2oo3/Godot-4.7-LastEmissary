@@ -23,6 +23,19 @@ func move_to(cell: Vector2i):
 	if cell.y < 0 or cell.y >= board.COLUMNS:
 		return
 
+	var dx = cell.x - current_cell.x
+	var dy = cell.y - current_cell.y
+
+	# Solo horizontal o vertical, exactamente 2 casillas
+	var movimiento_valido = (
+		(abs(dx) == 2 and dy == 0) or
+		(abs(dy) == 2 and dx == 0)
+	)
+
+	if !movimiento_valido:
+		print("Movimiento inválido")
+		return
+
 	current_cell = cell
 	position = board.map_to_local(cell)
 

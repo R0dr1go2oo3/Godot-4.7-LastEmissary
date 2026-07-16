@@ -5,8 +5,12 @@ extends Node2D
 @onready var select_tile: TileMapLayer = $scenarios/selectTile
 
 @onready var paladin = $characters/Paladin
+@onready var ninja = $characters/Ninja
+@onready var sumo = $characters/Sumo
+@onready var robot = $characters/Robot
 
 var selected_character = null
+var characters = []
 
 var spawn_cells := [
 	Vector2i(0, 0),
@@ -27,10 +31,12 @@ func _ready():
 
 	spawn_cells.shuffle()
 
-	$characters/Ninja.spawn(spawn_cells[0], full_tile)
+	ninja.spawn(spawn_cells[0], full_tile)
 	paladin.spawn(spawn_cells[1], full_tile)
-	$characters/Sumo.spawn(spawn_cells[2], full_tile)
-	$characters/Robot.spawn(spawn_cells[3], full_tile)
+	sumo.spawn(spawn_cells[2], full_tile)
+	robot.spawn(spawn_cells[3], full_tile)
+
+	characters = [ninja, paladin, sumo, robot]
 
 
 func _unhandled_input(event):
@@ -43,15 +49,17 @@ func _unhandled_input(event):
 		var mouse_local = full_tile.to_local(mouse_global)
 		var cell = full_tile.local_to_map(mouse_local)
 
-		# Seleccionar el paladín
+		# Seleccionar una pieza
 		if selected_character == null:
 
-			if cell == paladin.current_cell:
-				selected_character = paladin
-				paladin.selected = true
-				print("Paladín seleccionado")
+			for character in characters:
+				if cell == character.current_cell:
+					selected_character = character
+					character.selected = true
+					print(character.name, " seleccionado")
+					break
 
-		# Mover el paladín
+		# Mover la pieza seleccionada
 		else:
 
 			selected_character.move_to(cell)
