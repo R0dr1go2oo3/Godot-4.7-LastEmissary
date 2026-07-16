@@ -14,19 +14,18 @@ func spawn(cell: Vector2i, board_layer: TileMapLayer):
 	position = board.map_to_local(cell)
 
 
-func move_to(cell: Vector2i):
+func move_to(cell: Vector2i) -> bool:
 
 	# No salir del tablero
 	if cell.x < 0 or cell.x >= board.ROWS:
-		return
+		return false
 
 	if cell.y < 0 or cell.y >= board.COLUMNS:
-		return
+		return false
 
 	var dx = cell.x - current_cell.x
 	var dy = cell.y - current_cell.y
 
-	# Solo horizontal o vertical, exactamente 2 casillas
 	var movimiento_valido = (
 		(abs(dx) == 2 and dy == 0) or
 		(abs(dy) == 2 and dx == 0)
@@ -34,9 +33,11 @@ func move_to(cell: Vector2i):
 
 	if !movimiento_valido:
 		print("Movimiento inválido")
-		return
+		return false
 
 	current_cell = cell
 	position = board.map_to_local(cell)
 
-	print("Paladín movido a ", cell)
+	print("Robot movido a ", cell)
+
+	return true

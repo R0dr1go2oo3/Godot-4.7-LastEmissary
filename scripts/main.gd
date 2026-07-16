@@ -12,6 +12,9 @@ extends Node2D
 var selected_character = null
 var characters = []
 
+var turn := 1
+var pieces_moved := []
+
 var spawn_cells := [
 	Vector2i(0, 0),
 	Vector2i(0, 3),
@@ -38,6 +41,8 @@ func _ready():
 
 	characters = [ninja, paladin, sumo, robot]
 
+	print("Turno:", turn)
+
 
 func _unhandled_input(event):
 
@@ -53,6 +58,14 @@ func _unhandled_input(event):
 		if selected_character == null:
 
 			for character in characters:
+
+				if character in pieces_moved:
+					continue
+
+				if character == robot and turn % 2 != 0:
+					print("El Robot está recargando")
+					continue
+
 				if cell == character.current_cell:
 					selected_character = character
 					character.selected = true
@@ -62,6 +75,29 @@ func _unhandled_input(event):
 		# Mover la pieza seleccionada
 		else:
 
-			selected_character.move_to(cell)
-			selected_character.selected = false
-			selected_character = null
+			var ocupada := false
+
+			for character in characters:
+				if character != selected_character and character.current_cell == cell:
+					ocupada = true
+					break
+
+			if !ocupada:
+
+				if selected_character.move_to(cell):
+
+					pieces_moved.append(selected_character)
+
+					selected_character.selected = false
+					selected_character = null
+
+					var movimientos_necesarios := 4
+
+					# En turnos impares el Robot no juega
+					if turn % 2 != 0:
+						movimientos_necesarios = 3
+
+					if pieces_moved.size() == movimientos_necesarios:
+						turn += 1
+						pieces_moved.clear()
+						print("Turno:", turn)
