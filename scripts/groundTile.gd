@@ -4,6 +4,8 @@ const ROWS := 25
 const COLUMNS := 10
 
 var grid := {}
+var obstacle_layer: TileMapLayer
+
 
 func crear_tablero():
 
@@ -39,7 +41,15 @@ func is_occupied(cell: Vector2i) -> bool:
 	if !is_inside_board(cell):
 		return false
 
-	return grid[cell].occupant != null
+	return grid[cell]["occupant"] != null
+
+
+func has_obstacle(cell: Vector2i) -> bool:
+
+	if obstacle_layer == null:
+		return false
+
+	return obstacle_layer.has_obstacle(cell)
 
 
 func get_occupant(cell: Vector2i):
@@ -47,19 +57,19 @@ func get_occupant(cell: Vector2i):
 	if !is_inside_board(cell):
 		return null
 
-	return grid[cell].occupant
+	return grid[cell]["occupant"]
 
 
 func add_occupant(cell: Vector2i, piece):
 
 	if is_inside_board(cell):
-		grid[cell].occupant = piece
+		grid[cell]["occupant"] = piece
 
 
 func remove_occupant(cell: Vector2i):
 
 	if is_inside_board(cell):
-		grid[cell].occupant = null
+		grid[cell]["occupant"] = null
 
 
 func move_occupant(old_cell: Vector2i, new_cell: Vector2i):
@@ -70,7 +80,7 @@ func move_occupant(old_cell: Vector2i, new_cell: Vector2i):
 	if !is_inside_board(new_cell):
 		return
 
-	var piece = grid[old_cell].occupant
+	var piece = grid[old_cell]["occupant"]
 
-	grid[old_cell].occupant = null
-	grid[new_cell].occupant = piece
+	grid[old_cell]["occupant"] = null
+	grid[new_cell]["occupant"] = piece

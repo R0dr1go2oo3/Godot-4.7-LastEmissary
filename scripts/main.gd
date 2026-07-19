@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var full_tile: TileMapLayer = $scenarios/groundTile
+@onready var obstacle_tile: TileMapLayer = $scenarios/obstacleTile
 @onready var empty_tile: TileMapLayer = $scenarios/mouseTile
 @onready var select_tile: TileMapLayer = $scenarios/movesTile
 
@@ -30,6 +31,11 @@ func _ready():
 	randomize()
 
 	full_tile.crear_tablero()
+
+	# NUEVO
+	full_tile.obstacle_layer = obstacle_tile
+
+	obstacle_tile.crear_obstaculos()
 
 	empty_tile.base_layer = full_tile
 
@@ -87,6 +93,9 @@ func _unhandled_input(event):
 
 			selected_character = piece
 			selected_character.selected = true
+
+			select_tile.show_moves(selected_character.get_possible_moves())
+
 			print(selected_character.name, " seleccionado")
 
 		# -------------------------
@@ -101,6 +110,9 @@ func _unhandled_input(event):
 
 				selected_character.selected = false
 				selected_character = null
+
+				select_tile.clear_moves()
+
 				return
 
 			var old_cell: Vector2i = selected_character.current_cell
@@ -119,6 +131,8 @@ func _unhandled_input(event):
 
 				selected_character.selected = false
 				selected_character = null
+
+				select_tile.clear_moves()
 
 				var movimientos_necesarios := 6
 
