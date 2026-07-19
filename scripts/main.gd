@@ -58,93 +58,130 @@ func _ready():
 
 func _unhandled_input(event):
 
-	if event is InputEventMouseButton \
-	and event.button_index == MOUSE_BUTTON_LEFT \
-	and event.pressed:
+	if !(event is InputEventMouseButton):
+		return
 
-		var mouse_global = full_tile.get_global_mouse_position()
-		var mouse_local = full_tile.to_local(mouse_global)
-		var cell = full_tile.local_to_map(mouse_local)
+	if event.button_index != MOUSE_BUTTON_LEFT or !event.pressed:
+		return
 
-		# -------------------------
-		# Seleccionar pieza
-		# -------------------------
+	var mouse_global = full_tile.get_global_mouse_position()
+	var mouse_local = full_tile.to_local(mouse_global)
+	var cell = full_tile.local_to_map(mouse_local)
 
-		if selected_character == null:
+	var piece = full_tile.get_occupant(cell)
 
-			var piece = full_tile.get_occupant(cell)
+	# =====================================================
+	# NO HAY NINGUNA PIEZA SELECCIONADA
+	# =====================================================
 
-			if piece == null:
+	if selected_character == null:
+
+		if piece == null:
+			return
+
+		if piece == robot:
+
+			if turn % 2 != 0:
+				print("El Robot está recargando")
 				return
 
-			if piece == robot:
+			if robot_moves >= 3:
+				return
 
-				if turn % 2 != 0:
-					print("El Robot está recargando")
-					return
+		elif piece in pieces_moved:
+			return
 
-				if robot_moves >= 3:
-					return
+		selected_character = piece
+		selected_character.selected = true
 
+		select_tile.show_moves(selected_character.get_possible_moves())
+
+		print(selected_character.name, " seleccionado")
+
+		return
+
+	# =====================================================
+	# YA HAY UNA PIEZA SELECCIONADA
+	# =====================================================
+
+	# Clic sobre la misma pieza -> deseleccionar
+	if piece == selected_character:
+
+		selected_character.selected = false
+		selected_character = null
+		select_tile.clear_moves()
+
+		return
+
+	# Clic sobre otra pieza -> cambiar selección
+	if piece != null:
+
+		if piece == robot:
+
+			if turn % 2 != 0:
+				print("El Robot está recargando")
+				return
+
+			if robot_moves >= 3:
+				return
+
+		elif piece in pieces_moved:
+			return
+
+		selected_character.selected = false
+
+		selected_character = piece
+		selected_character.selected = true
+
+		select_tile.show_moves(selected_character.get_possible_moves())
+
+		print(selected_character.name, " seleccionado")
+
+		return
+
+	# Clic en una casilla vacía
+
+	# Si es un movimiento válido, mover.
+	if cell in selected_character.get_possible_moves():
+
+		var old_cell: Vector2i = selected_character.current_cell
+
+		if selected_character.move_to(cell):
+
+			full_tile.move_occupant(
+				old_cell,
+				selected_character.current_cell
+			)
+
+			if selected_character == robot:
+				robot_moves += 1
 			else:
+				pieces_moved.append(selected_character)
 
-				if piece in pieces_moved:
-					return
+			selected_character.selected = false
+			selected_character = null
 
-			selected_character = piece
-			selected_character.selected = true
+			select_tile.clear_moves()
 
-			select_tile.show_moves(selected_character.get_possible_moves())
+			var movimientos_necesarios := 6
 
-			print(selected_character.name, " seleccionado")
+			if turn % 2 != 0:
+				movimientos_necesarios = 3
 
-		# -------------------------
-		# Mover pieza
-		# -------------------------
+			var acciones := pieces_moved.size() + robot_moves
 
-		else:
+			if acciones == movimientos_necesarios:
 
-			# Todas las piezas excepto el Sumo tienen prohibido
-			# intentar moverse a una casilla ocupada.
-			if selected_character != sumo and full_tile.is_occupied(cell):
+				turn += 1
+				pieces_moved.clear()
+				robot_moves = 0
 
-				selected_character.selected = false
-				selected_character = null
+				print("Turno:", turn)
 
-				select_tile.clear_moves()
+		return
 
-				return
+	# Si la casilla vacía NO es un movimiento válido, deseleccionar.
+	selected_character.selected = false
+	selected_character = null
 
-			var old_cell: Vector2i = selected_character.current_cell
-
-			if selected_character.move_to(cell):
-
-				full_tile.move_occupant(
-					old_cell,
-					selected_character.current_cell
-				)
-
-				if selected_character == robot:
-					robot_moves += 1
-				else:
-					pieces_moved.append(selected_character)
-
-				selected_character.selected = false
-				selected_character = null
-
-				select_tile.clear_moves()
-
-				var movimientos_necesarios := 6
-
-				if turn % 2 != 0:
-					movimientos_necesarios = 3
-
-				var acciones := pieces_moved.size() + robot_moves
-
-				if acciones == movimientos_necesarios:
-
-					turn += 1
-					pieces_moved.clear()
-					robot_moves = 0
-
-					print("Turno:", turn)
+	select_tile.clear_moves()

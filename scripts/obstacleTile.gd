@@ -19,9 +19,10 @@ func crear_obstaculos():
 	generar_obstaculos()
 
 
+
 func generar_obstaculos():
 
-	var cantidad := 10
+	var cantidad := 30
 	var colocados := 0
 
 	while colocados < cantidad:
@@ -31,11 +32,35 @@ func generar_obstaculos():
 			randi_range(0, 9)     # Filas
 		)
 
+
+		# Evita repetir obstáculo
 		if has_obstacle(cell):
 			continue
 
+
+		# Verifica que la columna conserve 2 espacios libres
+		if columna_llena(cell.x):
+			continue
+
+
 		add_obstacle(cell)
 		colocados += 1
+
+
+
+func columna_llena(column: int) -> bool:
+
+	var obstaculos_en_columna := 0
+
+	for y in range(COLUMNS):
+
+		if has_obstacle(Vector2i(column, y)):
+			obstaculos_en_columna += 1
+
+
+	# 10 filas - 2 espacios libres = máximo 8 obstáculos
+	return obstaculos_en_columna >= COLUMNS - 2
+
 
 
 func is_inside_board(cell: Vector2i) -> bool:
@@ -48,12 +73,14 @@ func is_inside_board(cell: Vector2i) -> bool:
 	)
 
 
+
 func has_obstacle(cell: Vector2i) -> bool:
 
 	if !is_inside_board(cell):
 		return false
 
 	return obstacles[cell]
+
 
 
 func add_obstacle(cell: Vector2i):
@@ -65,6 +92,7 @@ func add_obstacle(cell: Vector2i):
 
 	# Tile ID 3
 	set_cell(cell, 3, Vector2i(0, 0), 0)
+
 
 
 func remove_obstacle(cell: Vector2i):
