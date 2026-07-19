@@ -4,9 +4,9 @@
 [ext_resource type="Script" uid="uid://dwrktvhwsq6kb" path="res://scripts/main.gd" id="1_272bh"]
 [ext_resource type="Texture2D" uid="uid://rucmtwgikfjl" path="res://sprites/emptytile.png" id="2_h2yge"]
 [ext_resource type="Texture2D" uid="uid://cq5v2mbcyu725" path="res://sprites/selectile.png" id="3_h2yge"]
-[ext_resource type="Script" uid="uid://cvvnk2ln4ql7u" path="res://scripts/fulltile.gd" id="4_1bvp3"]
-[ext_resource type="Script" uid="uid://cnlyxalqa4x60" path="res://scripts/emptytile.gd" id="5_7mycd"]
-[ext_resource type="Script" uid="uid://coe7ghnl0jm1r" path="res://scripts/selecttile.gd" id="6_272bh"]
+[ext_resource type="Script" uid="uid://cvvnk2ln4ql7u" path="res://scripts/groundTile.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://cnlyxalqa4x60" path="res://scripts/mouseTile.gd" id="5_7mycd"]
+[ext_resource type="Script" uid="uid://coe7ghnl0jm1r" path="res://scripts/movesTile.gd" id="6_272bh"]
 [ext_resource type="PackedScene" uid="uid://bi0fdhiiwhyl" path="res://paladin.tscn" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://cmfu48736dsfr" path="res://ninja.tscn" id="9_kek77"]
 [ext_resource type="PackedScene" uid="uid://chcrqv68kpbny" path="res://sumo.tscn" id="10_4c57u"]
@@ -117,15 +117,15 @@ script = ExtResource("1_272bh")
 
 [node name="scenarios" type="Node2D" parent="." unique_id=1707457842]
 
-[node name="fullTile" type="TileMapLayer" parent="scenarios" unique_id=980026092]
+[node name="groundTile" type="TileMapLayer" parent="scenarios" unique_id=980026092]
 tile_set = SubResource("TileSet_wyeb1")
 script = ExtResource("4_1bvp3")
 
-[node name="emptyTile" type="TileMapLayer" parent="scenarios" unique_id=400335235]
+[node name="mouseTile" type="TileMapLayer" parent="scenarios" unique_id=400335235]
 tile_set = SubResource("TileSet_efxa6")
 script = ExtResource("5_7mycd")
 
-[node name="selectTile" type="TileMapLayer" parent="scenarios" unique_id=1367098504]
+[node name="movesTile" type="TileMapLayer" parent="scenarios" unique_id=1367098504]
 tile_set = SubResource("TileSet_dg77c")
 script = ExtResource("6_272bh")
 

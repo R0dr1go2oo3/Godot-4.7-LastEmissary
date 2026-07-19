@@ -16,23 +16,31 @@ func spawn(cell: Vector2i, board_layer: TileMapLayer):
 
 func move_to(cell: Vector2i) -> bool:
 
-	# No salir del tablero
-	if cell.x < 0 or cell.x >= board.ROWS:
-		return false
-
-	if cell.y < 0 or cell.y >= board.COLUMNS:
-		return false
-
 	var dx = cell.x - current_cell.x
 	var dy = cell.y - current_cell.y
 
-	var movimiento_valido = (
-		(abs(dx) == 2 and dy == 0) or
-		(abs(dy) == 2 and dx == 0)
-	)
-
-	if !movimiento_valido:
+	# Solo puede intentar moverse una casilla en cualquiera de las 8 direcciones
+	if abs(dx) > 1 or abs(dy) > 1 or (dx == 0 and dy == 0):
 		print("Movimiento inválido")
+		return false
+
+	# Si la casilla está ocupada, intentar saltarla
+	if board.is_occupied(cell):
+
+		var landing := cell + Vector2i(dx, dy)
+
+		if !board.is_inside_board(landing):
+			print("No puede saltar fuera del tablero")
+			return false
+
+		if board.is_occupied(landing):
+			print("No puede aterrizar sobre otra pieza")
+			return false
+
+		cell = landing
+
+	# Ya sea movimiento normal o salto, comprobar tablero
+	if !board.is_inside_board(cell):
 		return false
 
 	current_cell = cell

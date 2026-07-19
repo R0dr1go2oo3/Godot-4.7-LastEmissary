@@ -5,7 +5,6 @@ var current_cell: Vector2i
 
 var selected := false
 
-
 func spawn(cell: Vector2i, board_layer: TileMapLayer):
 
 	board = board_layer
@@ -26,10 +25,12 @@ func move_to(cell: Vector2i) -> bool:
 	var dx = cell.x - current_cell.x
 	var dy = cell.y - current_cell.y
 
+	# Un solo paso ortogonal
 	var movimiento_valido = (
-		(abs(dx) == 2 and dy == 0) or
-		(abs(dy) == 2 and dx == 0)
-	)
+	abs(dx) <= 1 and
+	abs(dy) <= 1 and
+	(dx != 0 or dy != 0)
+)
 
 	if !movimiento_valido:
 		print("Movimiento inválido")
