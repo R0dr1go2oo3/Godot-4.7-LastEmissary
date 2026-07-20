@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cmiyama1wsi0q" path="res://sprites/fulltile.png" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://dwrktvhwsq6kb" path="res://scripts/main.gd" id="1_272bh"]
 [ext_resource type="Texture2D" uid="uid://rucmtwgikfjl" path="res://sprites/emptytile.png" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://0pt5inn5ol2s" path="res://scripts/boardState.gd" id="2_vivmo"]
 [ext_resource type="Texture2D" uid="uid://cq5v2mbcyu725" path="res://sprites/selectile.png" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://cvvnk2ln4ql7u" path="res://scripts/groundTile.gd" id="4_1bvp3"]
 [ext_resource type="Script" uid="uid://cnlyxalqa4x60" path="res://scripts/mouseTile.gd" id="5_7mycd"]
@@ -13,6 +14,7 @@
 [ext_resource type="Script" uid="uid://byed6ryhvmukg" path="res://scripts/obstacleTile.gd" id="9_w48qg"]
 [ext_resource type="PackedScene" uid="uid://chcrqv68kpbny" path="res://sumo.tscn" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bs216c40nqwg4" path="res://robot.tscn" id="11_efxa6"]
+[ext_resource type="Script" uid="uid://bbd0mpvsk0pvs" path="res://scripts/manager.gd" id="14_w48qg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4c57u"]
 texture = ExtResource("1_0xm2m")
@@ -162,21 +164,22 @@ sources/3 = SubResource("TileSetAtlasSource_0odxb")
 [node name="Main" type="Node2D" unique_id=1992131558]
 script = ExtResource("1_272bh")
 
-[node name="scenarios" type="Node2D" parent="." unique_id=1707457842]
+[node name="boardState" type="Node2D" parent="." unique_id=1707457842]
+script = ExtResource("2_vivmo")
 
-[node name="groundTile" type="TileMapLayer" parent="scenarios" unique_id=980026092]
+[node name="groundTile" type="TileMapLayer" parent="boardState" unique_id=980026092]
 tile_set = SubResource("TileSet_wyeb1")
 script = ExtResource("4_1bvp3")
 
-[node name="mouseTile" type="TileMapLayer" parent="scenarios" unique_id=400335235]
+[node name="mouseTile" type="TileMapLayer" parent="boardState" unique_id=400335235]
 tile_set = SubResource("TileSet_efxa6")
 script = ExtResource("5_7mycd")
 
-[node name="movesTile" type="TileMapLayer" parent="scenarios" unique_id=1367098504]
+[node name="movesTile" type="TileMapLayer" parent="boardState" unique_id=1367098504]
 tile_set = SubResource("TileSet_dg77c")
 script = ExtResource("6_272bh")
 
-[node name="obstacleTile" type="TileMapLayer" parent="scenarios" unique_id=79108210]
+[node name="obstacleTile" type="TileMapLayer" parent="boardState" unique_id=79108210]
 tile_set = SubResource("TileSet_ry7xg")
 script = ExtResource("9_w48qg")
 
@@ -189,6 +192,9 @@ script = ExtResource("9_w48qg")
 [node name="Sumo" parent="characters" unique_id=817593643 instance=ExtResource("10_4c57u")]
 
 [node name="Robot" parent="characters" unique_id=1519225630 instance=ExtResource("11_efxa6")]
+
+[node name="manager" type="Node2D" parent="." unique_id=1345210161]
+script = ExtResource("14_w48qg")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1145108508]
 position = Vector2(824, 400)
