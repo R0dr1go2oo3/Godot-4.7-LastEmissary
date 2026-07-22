@@ -1,16 +1,17 @@
 extends TileMapLayer
 
-@export var base_layer: TileMapLayer
+@export var ground_tile: TileMapLayer
 
 var last_cell := Vector2i(99999, 99999)
 
+
 func _process(_delta):
 
-	if base_layer == null:
+	if ground_tile == null:
 		return
 
-	var mouse_local := base_layer.to_local(get_global_mouse_position())
-	var cell := base_layer.local_to_map(mouse_local)
+	var mouse_local := ground_tile.to_local(get_global_mouse_position())
+	var cell := ground_tile.local_to_map(mouse_local)
 
 	if cell == last_cell:
 		return

@@ -1,7 +1,7 @@
 extends Node
 
 
-"""const ROWS := 25
+const ROWS := 25
 const COLUMNS := 10
 
 
@@ -43,10 +43,15 @@ func create_board():
 			ground_tile.set_cell(
 				cell,
 				0,
-				Vector2i(0,0),
+				Vector2i(0, 0),
 				0
 			)
 
+
+
+# =====================================
+# CELDAS
+# =====================================
 
 
 func is_inside_board(cell: Vector2i) -> bool:
@@ -60,9 +65,9 @@ func is_inside_board(cell: Vector2i) -> bool:
 
 
 
-# =========================
+# =====================================
 # OCUPANTES
-# =========================
+# =====================================
 
 
 func is_occupied(cell: Vector2i) -> bool:
@@ -83,7 +88,10 @@ func get_occupant(cell: Vector2i):
 
 
 
-func set_occupant(cell: Vector2i, unit):
+func set_occupant(
+	cell: Vector2i,
+	unit
+):
 
 	if !is_inside_board(cell):
 		return
@@ -120,9 +128,9 @@ func move_occupant(
 
 
 
-# =========================
+# =====================================
 # OBSTACULOS
-# =========================
+# =====================================
 
 
 func has_obstacle(cell: Vector2i) -> bool:
@@ -139,7 +147,9 @@ func add_obstacle(cell: Vector2i):
 	if !is_inside_board(cell):
 		return
 
+
 	grid[cell]["obstacle"] = true
+
 
 	obstacle_tile.set_cell(
 		cell,
@@ -155,15 +165,17 @@ func remove_obstacle(cell: Vector2i):
 	if !is_inside_board(cell):
 		return
 
+
 	grid[cell]["obstacle"] = false
+
 
 	obstacle_tile.erase_cell(cell)
 
 
 
-# =========================
+# =====================================
 # GENERACION DE OBSTACULOS
-# =========================
+# =====================================
 
 
 func create_obstacles():
@@ -180,17 +192,18 @@ func clear_obstacles():
 
 		grid[cell]["obstacle"] = false
 
+
 	obstacle_tile.clear()
 
 
 
 func generate_obstacles():
 
-	var cantidad := 30
-	var colocados := 0
+	var amount := 30
+	var placed := 0
 
 
-	while colocados < cantidad:
+	while placed < amount:
 
 		var cell := Vector2i(
 			randi_range(3,23),
@@ -208,19 +221,19 @@ func generate_obstacles():
 
 		add_obstacle(cell)
 
-		colocados += 1
+		placed += 1
 
 
 
-func column_full(column:int) -> bool:
+func column_full(column: int) -> bool:
 
-	var count := 0
+	var obstacles := 0
 
 
 	for y in range(COLUMNS):
 
 		if has_obstacle(Vector2i(column,y)):
-			count += 1
+			obstacles += 1
 
 
-	return count >= COLUMNS - 2"""
+	return obstacles >= COLUMNS - 2

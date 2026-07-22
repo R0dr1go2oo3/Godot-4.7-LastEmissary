@@ -10,7 +10,7 @@ var pieces_moved := []
 var selected_character = null
 
 var board
-var obstacle_tile
+
 var mouse_tile
 var moves_tile
 
@@ -25,17 +25,23 @@ var spawn_cells := [
 
 
 func setup(
-	board_tile,
-	obstacle_layer,
+	board_state,
+	ground_tile,
+	obstacle_tile,
 	mouse_layer,
 	moves_layer,
 	character_list: Array
 ):
 
-	board = board_tile
-	obstacle_tile = obstacle_layer
+	board = board_state
+
 	mouse_tile = mouse_layer
 	moves_tile = moves_layer
+
+	board.setup(
+		ground_tile,
+		obstacle_tile
+	)
 
 	characters = character_list
 	robot = characters[3]
@@ -47,13 +53,10 @@ func start_game():
 
 	randomize()
 
-	board.crear_tablero()
+	board.create_board()
+	board.create_obstacles()
 
-	board.obstacle_layer = obstacle_tile
-
-	obstacle_tile.crear_obstaculos()
-
-	mouse_tile.base_layer = board
+	mouse_tile.ground_tile = board.ground_tile
 
 	spawn_cells.shuffle()
 
@@ -64,7 +67,7 @@ func start_game():
 			board
 		)
 
-		board.add_occupant(
+		board.set_occupant(
 			characters[i].current_cell,
 			characters[i]
 		)
@@ -91,7 +94,6 @@ func handle_click(cell: Vector2i):
 	if piece == selected_character:
 
 		deselect()
-
 		return
 
 	if piece != null:

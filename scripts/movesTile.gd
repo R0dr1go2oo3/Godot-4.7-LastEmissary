@@ -1,14 +1,14 @@
 extends TileMapLayer
 
-var highlighted_cells: Array[Vector2i] = []
+var visible_moves: Array[Vector2i] = []
 
 
 func clear_moves():
 
-	for cell in highlighted_cells:
+	for cell in visible_moves:
 		erase_cell(cell)
 
-	highlighted_cells.clear()
+	visible_moves.clear()
 
 
 func show_moves(cells: Array[Vector2i]):
@@ -20,4 +20,4 @@ func show_moves(cells: Array[Vector2i]):
 		# Tile ID 2
 		set_cell(cell, 2, Vector2i(0, 0), 0)
 
-		highlighted_cells.append(cell)
+		visible_moves.append(cell)

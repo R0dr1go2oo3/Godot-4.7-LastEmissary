@@ -2,6 +2,8 @@ extends Node2D
 
 @onready var game_manager = $manager
 
+@onready var board_state = $boardState
+
 @onready var full_tile: TileMapLayer = $boardState/groundTile
 @onready var obstacle_tile: TileMapLayer = $boardState/obstacleTile
 @onready var empty_tile: TileMapLayer = $boardState/mouseTile
@@ -16,6 +18,7 @@ extends Node2D
 func _ready():
 
 	game_manager.setup(
+		board_state,
 		full_tile,
 		obstacle_tile,
 		empty_tile,
