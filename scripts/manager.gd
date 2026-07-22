@@ -2,19 +2,19 @@ extends Node
 
 var turn := 1
 
-var robot: Node = null
+var robot: Character = null
 
 var robot_moves := 0
 var pieces_moved := []
 
-var selected_character = null
+var selected_character: Character = null
 
 var board
 
 var mouse_tile
 var moves_tile
 
-var characters := []
+var characters = []
 
 var spawn_cells := [
 	Vector2i(0, 0),
@@ -88,7 +88,6 @@ func handle_click(cell: Vector2i):
 			return
 
 		select_piece(piece)
-
 		return
 
 	if piece == selected_character:
@@ -102,13 +101,12 @@ func handle_click(cell: Vector2i):
 			return
 
 		select_piece(piece)
-
 		return
 
 	move_selected(cell)
 
 
-func select_piece(piece):
+func select_piece(piece: Character):
 
 	if selected_character != null:
 		selected_character.selected = false
@@ -132,14 +130,14 @@ func deselect():
 	moves_tile.clear_moves()
 
 
-func move_selected(cell):
+func move_selected(cell: Vector2i):
 
 	if !(cell in selected_character.get_possible_moves()):
 
 		deselect()
 		return
 
-	var old_cell: Vector2i = selected_character.current_cell
+	var old_cell := selected_character.current_cell
 
 	if !selected_character.move_to(cell):
 		return
@@ -156,7 +154,7 @@ func move_selected(cell):
 	check_end_turn()
 
 
-func can_select(piece) -> bool:
+func can_select(piece: Character) -> bool:
 
 	if piece == robot:
 
@@ -174,7 +172,7 @@ func can_select(piece) -> bool:
 	return true
 
 
-func register_move(piece):
+func register_move(piece: Character):
 
 	if piece == robot:
 		robot_moves += 1
@@ -182,7 +180,7 @@ func register_move(piece):
 		pieces_moved.append(piece)
 
 
-func get_required_actions():
+func get_required_actions() -> int:
 
 	if turn % 2 != 0:
 		return 3
@@ -190,7 +188,7 @@ func get_required_actions():
 	return 6
 
 
-func get_current_actions():
+func get_current_actions() -> int:
 
 	return pieces_moved.size() + robot_moves
 

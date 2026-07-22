@@ -3,6 +3,13 @@ extends Node2D
 class_name Character
 
 
+@export var max_health := 1
+@export var moves_per_turn := 1
+@export var can_carry_message := true
+
+var health := 0
+var has_message := false
+
 var board
 var current_cell: Vector2i
 
@@ -13,6 +20,8 @@ func spawn(cell: Vector2i, board_state):
 
 	board = board_state
 	current_cell = cell
+
+	health = max_health
 
 	update_position()
 
@@ -51,3 +60,38 @@ func move_to(cell: Vector2i) -> bool:
 func get_possible_moves() -> Array[Vector2i]:
 
 	return []
+
+
+func take_damage(amount: int):
+
+	health -= amount
+
+	print(name, " recibe ", amount, " de daño. Vida: ", health)
+
+	if health <= 0:
+		die()
+
+
+func heal(amount: int):
+
+	health = min(health + amount, max_health)
+
+
+func die():
+
+	board.remove_occupant(current_cell)
+
+	print(name, " ha muerto")
+
+	queue_free()
+
+
+func pick_message():
+
+	if can_carry_message:
+		has_message = true
+
+
+func drop_message():
+
+	has_message = false
