@@ -1,15 +1,24 @@
 extends Character
 
 
-func is_blocked(cell: Vector2i) -> bool:
+func is_blocked(
+	cell: Vector2i,
+	ignore_units := false
+) -> bool:
 
-	return (
-		board.is_occupied(cell)
-		or board.has_obstacle(cell)
-	)
+	if board.has_obstacle(cell):
+		return true
+
+	if !ignore_units and board.is_occupied(cell):
+		return true
+
+	return false
 
 
-func get_possible_moves() -> Array[Vector2i]:
+func get_possible_moves_from(
+	cell: Vector2i,
+	ignore_units := false
+) -> Array[Vector2i]:
 
 	var moves: Array[Vector2i] = []
 
@@ -26,14 +35,14 @@ func get_possible_moves() -> Array[Vector2i]:
 
 	for dir in directions:
 
-		var target = current_cell + dir
+		var target = cell + dir
 
 		# Fuera del tablero
 		if !board.is_inside_board(target):
 			continue
 
 		# Movimiento normal
-		if !is_blocked(target):
+		if !is_blocked(target, ignore_units):
 			moves.append(target)
 			continue
 
@@ -44,7 +53,7 @@ func get_possible_moves() -> Array[Vector2i]:
 			continue
 
 		# No puede aterrizar sobre nada
-		if is_blocked(landing):
+		if is_blocked(landing, ignore_units):
 			continue
 
 		moves.append(landing)

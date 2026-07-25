@@ -1,7 +1,10 @@
 extends Character
 
 
-func get_possible_moves() -> Array[Vector2i]:
+func get_possible_moves_from(
+	cell: Vector2i,
+	ignore_units := false
+) -> Array[Vector2i]:
 
 	var moves: Array[Vector2i] = []
 
@@ -18,7 +21,7 @@ func get_possible_moves() -> Array[Vector2i]:
 
 	for dir in directions:
 
-		var target = current_cell + dir
+		var target = cell + dir
 
 		# Fuera del tablero
 		if !board.is_inside_board(target):
@@ -29,7 +32,7 @@ func get_possible_moves() -> Array[Vector2i]:
 			continue
 
 		# No puede caer sobre otra pieza
-		if board.is_occupied(target):
+		if !ignore_units and board.is_occupied(target):
 			continue
 
 		moves.append(target)

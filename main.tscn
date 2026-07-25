@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://chcrqv68kpbny" path="res://sumo.tscn" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bs216c40nqwg4" path="res://robot.tscn" id="11_efxa6"]
 [ext_resource type="Script" uid="uid://bbd0mpvsk0pvs" path="res://scripts/manager.gd" id="14_w48qg"]
+[ext_resource type="PackedScene" uid="uid://bfl76kgasvgef" path="res://pergamino.tscn" id="15_2cqfq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4c57u"]
 texture = ExtResource("1_0xm2m")
@@ -192,6 +193,10 @@ script = ExtResource("9_w48qg")
 [node name="Sumo" parent="characters" unique_id=817593643 instance=ExtResource("10_4c57u")]
 
 [node name="Robot" parent="characters" unique_id=1519225630 instance=ExtResource("11_efxa6")]
+
+[node name="items" type="Node2D" parent="." unique_id=740138756]
+
+[node name="pergamino" parent="items" unique_id=361437145 instance=ExtResource("15_2cqfq")]
 
 [node name="manager" type="Node2D" parent="." unique_id=1345210161]
 script = ExtResource("14_w48qg")

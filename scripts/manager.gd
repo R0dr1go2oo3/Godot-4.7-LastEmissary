@@ -54,23 +54,61 @@ func start_game():
 	randomize()
 
 	board.create_board()
-	board.create_obstacles()
+
+	# Dar acceso al BoardState antes de validar movimientos
+	for character in characters:
+
+		character.setup_board(board)
+
+
+	while true:
+
+		board.create_obstacles()
+
+		spawn_cells.shuffle()
+
+		var valid := true
+
+		board.clear_occupants()
+
+
+		for i in range(characters.size()):
+
+			characters[i].current_cell = spawn_cells[i]
+
+			board.set_occupant(
+				characters[i].current_cell,
+				characters[i]
+			)
+
+
+		for character in characters:
+
+			if !board.can_reach_goal(character):
+
+				valid = false
+				break
+
+
+		if valid:
+			break
+
 
 	mouse_tile.ground_tile = board.ground_tile
 
-	spawn_cells.shuffle()
 
-	for i in characters.size():
+	for i in range(characters.size()):
 
 		characters[i].spawn(
-			spawn_cells[i],
-			board
+			spawn_cells[i]
 		)
+
 
 		board.set_occupant(
 			characters[i].current_cell,
 			characters[i]
 		)
+
 
 	print("Turno:", turn)
 

@@ -1,11 +1,13 @@
 extends Node
 
+class_name BoardState
+
 
 const ROWS := 25
 const COLUMNS := 10
 
 
-var grid := {}
+var grid: Dictionary = {}
 
 var ground_tile: TileMapLayer
 var obstacle_tile: TileMapLayer
@@ -109,6 +111,14 @@ func remove_occupant(cell: Vector2i):
 
 
 
+func clear_occupants():
+
+	for cell in grid:
+
+		grid[cell]["occupant"] = null
+
+
+
 func move_occupant(
 	old_cell: Vector2i,
 	new_cell: Vector2i
@@ -154,7 +164,7 @@ func add_obstacle(cell: Vector2i):
 	obstacle_tile.set_cell(
 		cell,
 		3,
-		Vector2i(0,0),
+		Vector2i(0, 0),
 		0
 	)
 
@@ -167,7 +177,6 @@ func remove_obstacle(cell: Vector2i):
 
 
 	grid[cell]["obstacle"] = false
-
 
 	obstacle_tile.erase_cell(cell)
 
@@ -206,8 +215,8 @@ func generate_obstacles():
 	while placed < amount:
 
 		var cell := Vector2i(
-			randi_range(3,23),
-			randi_range(0,9)
+			randi_range(3, 23),
+			randi_range(0, 9)
 		)
 
 
@@ -232,8 +241,54 @@ func column_full(column: int) -> bool:
 
 	for y in range(COLUMNS):
 
-		if has_obstacle(Vector2i(column,y)):
+		if has_obstacle(Vector2i(column, y)):
 			obstacles += 1
 
 
 	return obstacles >= COLUMNS - 2
+
+
+
+# =====================================
+# VALIDACION DEL TABLERO
+# =====================================
+
+
+func can_reach_goal(character: Character) -> bool:
+
+	var visited: Dictionary = {}
+	var queue: Array[Vector2i] = []
+
+
+	queue.append(character.current_cell)
+	visited[character.current_cell] = true
+
+
+	while !queue.is_empty():
+
+		var current: Vector2i = queue.pop_front()
+
+
+		# Llegó a la última columna
+
+		if current.x == ROWS - 1:
+			return true
+
+
+		var moves: Array[Vector2i] = character.get_possible_moves_from(
+			current,
+			true
+		)
+
+
+		for next: Vector2i in moves:
+
+			if visited.has(next):
+				continue
+
+
+			visited[next] = true
+			queue.append(next)
+
+
+	return false
