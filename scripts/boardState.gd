@@ -292,3 +292,23 @@ func can_reach_goal(character: Character) -> bool:
 
 
 	return false
+
+func get_random_scroll_cell() -> Vector2i:
+
+	while true:
+
+		var cell := Vector2i(
+			randi_range(3, 19),
+			randi_range(0, COLUMNS - 1)
+		)
+
+		if has_obstacle(cell):
+			continue
+
+		if is_occupied(cell):
+			continue
+
+		return cell
+
+	# Nunca debería llegar aquí
+	return Vector2i.ZERO

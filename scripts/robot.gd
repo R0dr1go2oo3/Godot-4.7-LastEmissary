@@ -1,5 +1,7 @@
 extends Character
 
+class_name Robot
+
 
 func get_possible_moves_from(
 	cell: Vector2i,

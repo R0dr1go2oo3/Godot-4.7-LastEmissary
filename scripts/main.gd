@@ -14,6 +14,8 @@ extends Node2D
 @onready var sumo = $characters/Sumo
 @onready var robot = $characters/Robot
 
+@onready var scroll = $items/pergamino
+
 
 func _ready():
 
@@ -28,7 +30,8 @@ func _ready():
 			paladin,
 			sumo,
 			robot
-		]
+		],
+		scroll
 	)
 
 
@@ -37,16 +40,19 @@ func _unhandled_input(event):
 	if !(event is InputEventMouseButton):
 		return
 
-	if event.button_index != MOUSE_BUTTON_LEFT:
-		return
-
 	if !event.pressed:
 		return
 
-	var cell: Vector2i = full_tile.local_to_map(
-		full_tile.to_local(
-			full_tile.get_global_mouse_position()
-		)
-	)
+	if event.button_index == MOUSE_BUTTON_LEFT:
 
-	game_manager.handle_click(cell)
+		var cell: Vector2i = full_tile.local_to_map(
+			full_tile.to_local(
+				full_tile.get_global_mouse_position()
+			)
+		)
+
+		game_manager.handle_click(cell)
+
+	elif event.button_index == MOUSE_BUTTON_RIGHT:
+
+		game_manager.handle_right_click()

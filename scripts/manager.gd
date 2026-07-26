@@ -2,19 +2,20 @@ extends Node
 
 var turn := 1
 
-var robot: Character = null
+var board: BoardState
 
-var robot_moves := 0
-var pieces_moved := []
+var robot: Character = null
+var characters = []
 
 var selected_character: Character = null
 
-var board
+var robot_actions := 0
+var pieces_acted := []
 
 var mouse_tile
 var moves_tile
 
-var characters = []
+var scroll: Scroll
 
 var spawn_cells := [
 	Vector2i(0, 0),
@@ -30,7 +31,8 @@ func setup(
 	obstacle_tile,
 	mouse_layer,
 	moves_layer,
-	character_list: Array
+	character_list: Array,
+	scroll_node: Scroll
 ):
 
 	board = board_state
@@ -44,9 +46,23 @@ func setup(
 	)
 
 	characters = character_list
-	robot = characters[3]
+	robot = find_robot()
+
+	scroll = scroll_node
 
 	start_game()
+
+
+func find_robot() -> Character:
+
+	for character in characters:
+
+		if character.name == "Robot":
+			return character
+
+	push_error("No se encontró un Robot.")
+
+	return null
 
 
 func start_game():
@@ -55,11 +71,8 @@ func start_game():
 
 	board.create_board()
 
-	# Dar acceso al BoardState antes de validar movimientos
 	for character in characters:
-
 		character.setup_board(board)
-
 
 	while true:
 
@@ -71,7 +84,6 @@ func start_game():
 
 		board.clear_occupants()
 
-
 		for i in range(characters.size()):
 
 			characters[i].current_cell = spawn_cells[i]
@@ -81,7 +93,6 @@ func start_game():
 				characters[i]
 			)
 
-
 		for character in characters:
 
 			if !board.can_reach_goal(character):
@@ -89,26 +100,22 @@ func start_game():
 				valid = false
 				break
 
-
 		if valid:
 			break
 
-
 	mouse_tile.ground_tile = board.ground_tile
-
 
 	for i in range(characters.size()):
 
-		characters[i].spawn(
-			spawn_cells[i]
-		)
-
+		characters[i].spawn(spawn_cells[i])
 
 		board.set_occupant(
 			characters[i].current_cell,
 			characters[i]
 		)
 
+	scroll.setup(board)
+	scroll.spawn(board.get_random_scroll_cell())
 
 	print("Turno:", turn)
 
@@ -142,6 +149,23 @@ func handle_click(cell: Vector2i):
 		return
 
 	move_selected(cell)
+
+
+func handle_right_click():
+
+	if selected_character == null:
+		return
+
+	if !can_act(selected_character):
+		return
+
+	if selected_character.show_message():
+
+		register_action(selected_character)
+
+		deselect()
+
+		check_end_turn()
 
 
 func select_piece(piece: Character):
@@ -185,7 +209,15 @@ func move_selected(cell: Vector2i):
 		selected_character.current_cell
 	)
 
-	register_move(selected_character)
+	if selected_character.current_cell == scroll.current_cell:
+
+		if selected_character.pick_message():
+
+			scroll.collect()
+
+			print(selected_character.name, " ahora es portador.")
+
+	register_action(selected_character)
 
 	deselect()
 
@@ -194,28 +226,56 @@ func move_selected(cell: Vector2i):
 
 func can_select(piece: Character) -> bool:
 
+	return can_act(piece)
+
+
+func can_act(piece: Character) -> bool:
+
 	if piece == robot:
 
 		if turn % 2 != 0:
+
 			print("El Robot está recargando")
 			return false
 
-		if robot_moves >= 3:
+		if robot_actions >= 3:
 			return false
 
-	elif piece in pieces_moved:
+	elif piece in pieces_acted:
 
 		return false
 
 	return true
 
 
-func register_move(piece: Character):
+func register_action(piece: Character):
 
 	if piece == robot:
-		robot_moves += 1
+		robot_actions += 1
 	else:
-		pieces_moved.append(piece)
+		pieces_acted.append(piece)
+
+
+func get_carriers():
+
+	var carriers = []
+
+	for character in characters:
+
+		if character.is_carrier():
+			carriers.append(character)
+
+	return carriers
+
+
+func has_carriers() -> bool:
+
+	for character in characters:
+
+		if character.is_carrier():
+			return true
+
+	return false
 
 
 func get_required_actions() -> int:
@@ -228,7 +288,7 @@ func get_required_actions() -> int:
 
 func get_current_actions() -> int:
 
-	return pieces_moved.size() + robot_moves
+	return pieces_acted.size() + robot_actions
 
 
 func check_end_turn():
@@ -238,7 +298,7 @@ func check_end_turn():
 
 	turn += 1
 
-	pieces_moved.clear()
-	robot_moves = 0
+	pieces_acted.clear()
+	robot_actions = 0
 
 	print("Turno:", turn)

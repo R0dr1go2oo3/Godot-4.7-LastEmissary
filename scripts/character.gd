@@ -4,7 +4,7 @@ class_name Character
 
 
 @export var max_health := 1
-@export var moves_per_turn := 1
+@export var actions_per_turn := 1
 @export var can_carry_message := true
 
 
@@ -48,31 +48,23 @@ func move_to(cell: Vector2i) -> bool:
 	if board == null:
 		return false
 
-
 	if !board.is_inside_board(cell):
 		return false
-
 
 	if board.has_obstacle(cell):
 
 		print("No puedes moverte sobre un obstáculo")
-
 		return false
-
 
 	if board.is_occupied(cell):
 
 		print("Casilla ocupada")
-
 		return false
-
 
 	if cell not in get_possible_moves():
 
 		print("Movimiento inválido")
-
 		return false
-
 
 	current_cell = cell
 
@@ -105,9 +97,7 @@ func take_damage(amount: int):
 
 	print(name, " recibe ", amount, " de daño. Vida: ", health)
 
-
 	if health <= 0:
-
 		die()
 
 
@@ -124,9 +114,7 @@ func heal(amount: int):
 func die():
 
 	if board != null:
-
 		board.remove_occupant(current_cell)
-
 
 	print(name, " ha muerto")
 
@@ -134,14 +122,45 @@ func die():
 
 
 
-func pick_message():
+# =====================================
+# MENSAJE
+# =====================================
 
-	if can_carry_message:
+func is_carrier() -> bool:
 
-		has_message = true
+	return has_message
 
 
+func pick_message() -> bool:
 
-func drop_message():
+	if !can_carry_message:
+		return false
+
+	if has_message:
+		return false
+
+	has_message = true
+
+	return true
+
+
+func drop_message() -> bool:
+
+	if !has_message:
+		return false
 
 	has_message = false
+
+	return true
+
+
+func show_message() -> bool:
+
+	if !has_message:
+
+		print(name, " no es portador.")
+		return false
+
+	print(name, " utilizó Mostrar.")
+
+	return true
