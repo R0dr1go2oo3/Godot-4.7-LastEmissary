@@ -17,6 +17,9 @@
 [ext_resource type="Script" uid="uid://bbd0mpvsk0pvs" path="res://scripts/manager.gd" id="14_w48qg"]
 [ext_resource type="PackedScene" uid="uid://bfl76kgasvgef" path="res://pergamino.tscn" id="15_2cqfq"]
 [ext_resource type="Script" uid="uid://bjwb1ggp8jn0a" path="res://scripts/pergamino.gd" id="16_yaehf"]
+[ext_resource type="Script" uid="uid://bp4jyty3attyj" path="res://scripts/turnManager.gd" id="18_82xsv"]
+[ext_resource type="Script" uid="uid://oiammo7qro36" path="res://scripts/messageManager.gd" id="19_getpj"]
+[ext_resource type="Script" uid="uid://bbqd5lpbfcxou" path="res://scripts/gameSetup.gd" id="20_ryguw"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4c57u"]
 texture = ExtResource("1_0xm2m")
@@ -202,6 +205,15 @@ script = ExtResource("16_yaehf")
 
 [node name="manager" type="Node2D" parent="." unique_id=1345210161]
 script = ExtResource("14_w48qg")
+
+[node name="turnManager" type="Node2D" parent="manager" unique_id=1386798087]
+script = ExtResource("18_82xsv")
+
+[node name="messageManager" type="Node2D" parent="manager" unique_id=777919703]
+script = ExtResource("19_getpj")
+
+[node name="gameSetup" type="Node2D" parent="manager" unique_id=2083940067]
+script = ExtResource("20_ryguw")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1145108508]
 position = Vector2(824, 400)

@@ -9,15 +9,22 @@ extends Node2D
 @onready var empty_tile: TileMapLayer = $boardState/mouseTile
 @onready var select_tile: TileMapLayer = $boardState/movesTile
 
-@onready var paladin = $characters/Paladin
-@onready var ninja = $characters/Ninja
-@onready var sumo = $characters/Sumo
-@onready var robot = $characters/Robot
+@onready var paladin: Character = $characters/Paladin
+@onready var ninja: Character = $characters/Ninja
+@onready var sumo: Character = $characters/Sumo
+@onready var robot: Character = $characters/Robot
 
-@onready var scroll = $items/pergamino
+@onready var scroll: Scroll = $items/pergamino
 
 
 func _ready():
+
+	var characters: Array[Character] = [
+		ninja,
+		paladin,
+		sumo,
+		robot
+	]
 
 	game_manager.setup(
 		board_state,
@@ -25,12 +32,7 @@ func _ready():
 		obstacle_tile,
 		empty_tile,
 		select_tile,
-		[
-			ninja,
-			paladin,
-			sumo,
-			robot
-		],
+		characters,
 		scroll
 	)
 

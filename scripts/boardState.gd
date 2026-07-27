@@ -13,6 +13,9 @@ var ground_tile: TileMapLayer
 var obstacle_tile: TileMapLayer
 
 
+# =====================================
+# SETUP
+# =====================================
 
 func setup(
 	ground_layer: TileMapLayer,
@@ -21,7 +24,6 @@ func setup(
 
 	ground_tile = ground_layer
 	obstacle_tile = obstacle_layer
-
 
 
 func create_board():
@@ -50,11 +52,9 @@ func create_board():
 			)
 
 
-
 # =====================================
 # CELDAS
 # =====================================
-
 
 func is_inside_board(cell: Vector2i) -> bool:
 
@@ -66,11 +66,9 @@ func is_inside_board(cell: Vector2i) -> bool:
 	)
 
 
-
 # =====================================
 # OCUPANTES
 # =====================================
-
 
 func is_occupied(cell: Vector2i) -> bool:
 
@@ -80,14 +78,12 @@ func is_occupied(cell: Vector2i) -> bool:
 	return grid[cell]["occupant"] != null
 
 
-
 func get_occupant(cell: Vector2i):
 
 	if !is_inside_board(cell):
 		return null
 
 	return grid[cell]["occupant"]
-
 
 
 func set_occupant(
@@ -101,7 +97,6 @@ func set_occupant(
 	grid[cell]["occupant"] = unit
 
 
-
 func remove_occupant(cell: Vector2i):
 
 	if !is_inside_board(cell):
@@ -110,13 +105,11 @@ func remove_occupant(cell: Vector2i):
 	grid[cell]["occupant"] = null
 
 
-
 func clear_occupants():
 
 	for cell in grid:
 
 		grid[cell]["occupant"] = null
-
 
 
 func move_occupant(
@@ -130,18 +123,15 @@ func move_occupant(
 	if !is_inside_board(new_cell):
 		return
 
-
 	var unit = grid[old_cell]["occupant"]
 
 	grid[old_cell]["occupant"] = null
 	grid[new_cell]["occupant"] = unit
 
 
-
 # =====================================
-# OBSTACULOS
+# OBSTÁCULOS
 # =====================================
-
 
 func has_obstacle(cell: Vector2i) -> bool:
 
@@ -151,15 +141,12 @@ func has_obstacle(cell: Vector2i) -> bool:
 	return grid[cell]["obstacle"]
 
 
-
 func add_obstacle(cell: Vector2i):
 
 	if !is_inside_board(cell):
 		return
 
-
 	grid[cell]["obstacle"] = true
-
 
 	obstacle_tile.set_cell(
 		cell,
@@ -169,22 +156,14 @@ func add_obstacle(cell: Vector2i):
 	)
 
 
-
 func remove_obstacle(cell: Vector2i):
 
 	if !is_inside_board(cell):
 		return
 
-
 	grid[cell]["obstacle"] = false
 
 	obstacle_tile.erase_cell(cell)
-
-
-
-# =====================================
-# GENERACION DE OBSTACULOS
-# =====================================
 
 
 func create_obstacles():
@@ -194,23 +173,19 @@ func create_obstacles():
 	generate_obstacles()
 
 
-
 func clear_obstacles():
 
 	for cell in grid:
 
 		grid[cell]["obstacle"] = false
 
-
 	obstacle_tile.clear()
-
 
 
 func generate_obstacles():
 
 	var amount := 30
 	var placed := 0
-
 
 	while placed < amount:
 
@@ -219,79 +194,63 @@ func generate_obstacles():
 			randi_range(0, 9)
 		)
 
-
 		if has_obstacle(cell):
 			continue
 
-
 		if column_full(cell.x):
 			continue
-
 
 		add_obstacle(cell)
 
 		placed += 1
 
 
-
 func column_full(column: int) -> bool:
 
 	var obstacles := 0
-
 
 	for y in range(COLUMNS):
 
 		if has_obstacle(Vector2i(column, y)):
 			obstacles += 1
 
-
 	return obstacles >= COLUMNS - 2
 
 
-
 # =====================================
-# VALIDACION DEL TABLERO
+# UTILIDADES
 # =====================================
-
 
 func can_reach_goal(character: Character) -> bool:
 
 	var visited: Dictionary = {}
 	var queue: Array[Vector2i] = []
 
-
 	queue.append(character.current_cell)
 	visited[character.current_cell] = true
-
 
 	while !queue.is_empty():
 
 		var current: Vector2i = queue.pop_front()
 
-
-		# Llegó a la última columna
-
 		if current.x == ROWS - 1:
 			return true
-
 
 		var moves: Array[Vector2i] = character.get_possible_moves_from(
 			current,
 			true
 		)
 
-
 		for next: Vector2i in moves:
 
 			if visited.has(next):
 				continue
 
-
 			visited[next] = true
 			queue.append(next)
 
-
 	return false
+
 
 func get_random_scroll_cell() -> Vector2i:
 
@@ -310,5 +269,4 @@ func get_random_scroll_cell() -> Vector2i:
 
 		return cell
 
-	# Nunca debería llegar aquí
 	return Vector2i.ZERO
