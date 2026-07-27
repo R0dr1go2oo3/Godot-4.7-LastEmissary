@@ -122,7 +122,7 @@ func start_game():
 
 func handle_click(cell: Vector2i):
 
-	var piece = board.get_occupant(cell)
+	var piece: Character = board.get_occupant(cell)
 
 	if selected_character == null:
 
@@ -159,13 +159,14 @@ func handle_right_click():
 	if !can_act(selected_character):
 		return
 
-	if selected_character.show_message():
+	if !use_show(selected_character):
+		return
 
-		register_action(selected_character)
+	register_action(selected_character)
 
-		deselect()
+	deselect()
 
-		check_end_turn()
+	check_end_turn()
 
 
 func select_piece(piece: Character):
@@ -199,7 +200,7 @@ func move_selected(cell: Vector2i):
 		deselect()
 		return
 
-	var old_cell := selected_character.current_cell
+	var old_cell: Vector2i = selected_character.current_cell
 
 	if !selected_character.move_to(cell):
 		return
@@ -222,6 +223,64 @@ func move_selected(cell: Vector2i):
 	deselect()
 
 	check_end_turn()
+
+
+func use_show(character: Character) -> bool:
+
+	if !character.show_message():
+		return false
+
+	print(character.name, " utilizó Mostrar.")
+
+	var transmitted := false
+
+	for cell: Vector2i in get_adjacent_cells(character.current_cell):
+
+		var target: Character = board.get_occupant(cell)
+
+		if target == null:
+			continue
+
+		if target == character:
+			continue
+
+		if target.pick_message():
+
+			print(target.name, " recibió el mensaje.")
+
+			transmitted = true
+
+	if !transmitted:
+
+		print("Ningún personaje recibió el mensaje.")
+
+	return true
+
+
+func get_adjacent_cells(cell: Vector2i) -> Array[Vector2i]:
+
+	var cells: Array[Vector2i] = []
+
+	var directions: Array[Vector2i] = [
+		Vector2i(-1, -1),
+		Vector2i(0, -1),
+		Vector2i(1, -1),
+		Vector2i(-1, 0),
+		Vector2i(1, 0),
+		Vector2i(-1, 1),
+		Vector2i(0, 1),
+		Vector2i(1, 1)
+	]
+
+	for dir: Vector2i in directions:
+
+		var target: Vector2i = cell + dir
+
+		if board.is_inside_board(target):
+
+			cells.append(target)
+
+	return cells
 
 
 func can_select(piece: Character) -> bool:
@@ -256,11 +315,11 @@ func register_action(piece: Character):
 		pieces_acted.append(piece)
 
 
-func get_carriers():
+func get_carriers() -> Array[Character]:
 
-	var carriers = []
+	var carriers: Array[Character] = []
 
-	for character in characters:
+	for character: Character in characters:
 
 		if character.is_carrier():
 			carriers.append(character)
@@ -270,7 +329,7 @@ func get_carriers():
 
 func has_carriers() -> bool:
 
-	for character in characters:
+	for character: Character in characters:
 
 		if character.is_carrier():
 			return true

@@ -161,6 +161,4 @@ func show_message() -> bool:
 		print(name, " no es portador.")
 		return false
 
-	print(name, " utilizó Mostrar.")
-
 	return true
