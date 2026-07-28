@@ -179,9 +179,14 @@ func spawn_enemy(
 
 func enemy_turn():
 
-	for enemy in enemies:
+	var current_enemies: Array[Enemy] = enemies.duplicate()
+
+	for enemy in current_enemies:
 
 		if enemy == null:
+			continue
+
+		if !is_instance_valid(enemy):
 			continue
 
 		enemy.take_turn()
@@ -235,14 +240,16 @@ func remove_enemy(enemy: Enemy):
 
 	enemies.erase(enemy)
 
-	enemy.queue_free()
+	if is_instance_valid(enemy):
+
+		enemy.queue_free()
 
 
 func clear_enemies():
 
 	for enemy in enemies:
 
-		if enemy != null:
+		if enemy != null and is_instance_valid(enemy):
 
 			enemy.queue_free()
 

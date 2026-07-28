@@ -13,6 +13,7 @@ var ground_tile: TileMapLayer
 var obstacle_tile: TileMapLayer
 
 var enemy_manager: EnemyManager
+var scroll: Scroll
 
 
 # =====================================
@@ -31,6 +32,11 @@ func setup(
 func setup_enemy_manager(manager: EnemyManager):
 
 	enemy_manager = manager
+
+
+func setup_scroll(scroll_node: Scroll):
+
+	scroll = scroll_node
 
 
 func create_board():
@@ -85,6 +91,9 @@ func is_cell_free(cell: Vector2i) -> bool:
 		return false
 
 	if has_enemy(cell):
+		return false
+
+	if has_scroll(cell):
 		return false
 
 	return true
@@ -199,6 +208,18 @@ func get_enemy(cell: Vector2i) -> Enemy:
 		return null
 
 	return enemy_manager.get_enemy_at(cell)
+
+
+# =====================================
+# PERGAMINO
+# =====================================
+
+func has_scroll(cell: Vector2i) -> bool:
+
+	if scroll == null:
+		return false
+
+	return scroll.current_cell == cell
 
 
 # =====================================

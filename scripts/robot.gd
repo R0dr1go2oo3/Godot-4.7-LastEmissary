@@ -33,9 +33,11 @@ func get_possible_moves_from(
 		if board.has_obstacle(target):
 			continue
 
-		# No puede caer sobre otra pieza
+		# No puede caer sobre otro personaje
 		if !ignore_units and board.is_occupied(target):
 			continue
+
+		# Puede caer sobre un enemigo
 
 		moves.append(target)
 

@@ -6,14 +6,19 @@ class_name TurnManager
 var turn := 1
 
 var robot: Character = null
+var characters: Array[Character] = []
 
 var robot_actions := 0
 var pieces_acted: Array[Character] = []
 
 
-func setup(robot_character: Character):
+func setup(
+	robot_character: Character,
+	character_list: Array[Character]
+):
 
 	robot = robot_character
+	characters = character_list
 
 	turn = 1
 	robot_actions = 0
@@ -54,7 +59,6 @@ func register_action(piece: Character):
 	if piece == robot:
 
 		robot_actions += 1
-
 		return
 
 	if piece not in pieces_acted:
@@ -69,6 +73,8 @@ func remove_character(piece: Character):
 
 	pieces_acted.erase(piece)
 
+	characters.erase(piece)
+
 	if piece == robot:
 
 		robot = null
@@ -76,10 +82,24 @@ func remove_character(piece: Character):
 
 func get_required_actions() -> int:
 
-	if turn % 2 != 0:
-		return 3
+	var required := 0
 
-	return 6
+	for character in characters:
+
+		if !character.alive:
+			continue
+
+		if character == robot:
+
+			if turn % 2 == 0:
+
+				required += 3
+
+		else:
+
+			required += 1
+
+	return required
 
 
 func get_current_actions() -> int:

@@ -12,6 +12,9 @@ func is_blocked(
 	if !ignore_units and board.is_occupied(cell):
 		return true
 
+	if !ignore_units and board.has_enemy(cell):
+		return true
+
 	return false
 
 
@@ -43,6 +46,7 @@ func get_possible_moves_from(
 
 		# Movimiento normal
 		if !is_blocked(target, ignore_units):
+
 			moves.append(target)
 			continue
 
@@ -52,10 +56,36 @@ func get_possible_moves_from(
 		if !board.is_inside_board(landing):
 			continue
 
-		# No puede aterrizar sobre nada
-		if is_blocked(landing, ignore_units):
+		# No puede aterrizar sobre obstáculos
+		if board.has_obstacle(landing):
 			continue
+
+		# No puede aterrizar sobre otro personaje
+		if !ignore_units and board.is_occupied(landing):
+			continue
+
+		# Puede aterrizar sobre un enemigo
 
 		moves.append(landing)
 
 	return moves
+
+
+func move_to(cell: Vector2i) -> bool:
+
+	var direction := cell - current_cell
+
+	if abs(direction.x) == 2 or abs(direction.y) == 2:
+
+		var jumped_cell := current_cell + Vector2i(
+			sign(direction.x),
+			sign(direction.y)
+		)
+
+		var enemy: Enemy = board.get_enemy(jumped_cell)
+
+		if enemy != null:
+
+			enemy.take_damage(enemy.health)
+
+	return super.move_to(cell)

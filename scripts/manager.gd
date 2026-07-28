@@ -57,7 +57,10 @@ func setup(
 
 	scroll = scroll_node
 
-	turn_manager.setup(robot)
+	turn_manager.setup(
+		robot,
+		characters
+	)
 
 	message_manager.setup(
 		board,
@@ -77,6 +80,10 @@ func setup(
 
 	board.setup_enemy_manager(
 		enemy_manager
+	)
+
+	board.setup_scroll(
+		scroll
 	)
 
 	game_setup.setup(
@@ -198,6 +205,14 @@ func move_selected(cell: Vector2i):
 		selected_character.current_cell
 	)
 
+	var enemy: Enemy = board.get_enemy(
+		selected_character.current_cell
+	)
+
+	if enemy != null:
+
+		enemy.take_damage(enemy.health)
+
 	message_manager.check_scroll(
 		selected_character
 	)
@@ -237,8 +252,6 @@ func _on_character_died(character: Character):
 		deselect()
 
 	turn_manager.remove_character(character)
-
-	characters.erase(character)
 
 	if character == robot:
 
