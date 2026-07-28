@@ -1,31 +1,14 @@
 extends Character
 
 
-func is_blocked(
-	cell: Vector2i,
-	ignore_units := false
-) -> bool:
-
-	if board.has_obstacle(cell):
-		return true
-
-	if !ignore_units and board.is_occupied(cell):
-		return true
-
-	if !ignore_units and board.has_enemy(cell):
-		return true
-
-	return false
-
-
 func get_possible_moves_from(
 	cell: Vector2i,
-	ignore_units := false
+	_ignore_units := false
 ) -> Array[Vector2i]:
 
 	var moves: Array[Vector2i] = []
 
-	var directions = [
+	var directions: Array[Vector2i] = [
 		Vector2i(-1, -1),
 		Vector2i(0, -1),
 		Vector2i(1, -1),
@@ -36,56 +19,152 @@ func get_possible_moves_from(
 		Vector2i(1, 1)
 	]
 
-	for dir in directions:
+	for dir: Vector2i in directions:
 
-		var target = cell + dir
+		var first: Vector2i = cell + dir
 
-		# Fuera del tablero
-		if !board.is_inside_board(target):
+		if !board.is_inside_board(first):
 			continue
 
-		# Movimiento normal
-		if !is_blocked(target, ignore_units):
+		var second: Vector2i = first + dir
 
-			moves.append(target)
+		# =====================================
+		# CASILLA VACÍA
+		# =====================================
+
+		if !board.has_obstacle(first) \
+		and !board.is_occupied(first) \
+		and !board.has_enemy(first):
+
+			moves.append(first)
 			continue
 
-		# Movimiento con salto
-		var landing = target + dir
+		# =====================================
+		# ENEMIGO
+		# =====================================
 
-		if !board.is_inside_board(landing):
+		if board.has_enemy(first):
+
+			# Puede matar al primero quedándose en su casilla.
+			moves.append(first)
+
+			if !board.is_inside_board(second):
+				continue
+
+			# No puede saltar dos obstáculos.
+			if board.has_obstacle(second):
+				continue
+
+			# No puede terminar sobre un compañero.
+			if board.is_occupied(second):
+				continue
+
+			# Puede terminar en vacío o enemigo.
+			moves.append(second)
+
 			continue
 
-		# No puede aterrizar sobre obstáculos
-		if board.has_obstacle(landing):
+		# =====================================
+		# COMPAÑERO
+		# =====================================
+
+		if board.is_occupied(first):
+
+			if !board.is_inside_board(second):
+				continue
+
+			if board.has_obstacle(second):
+				continue
+
+			if board.is_occupied(second):
+				continue
+
+			# Puede caer sobre vacío o enemigo.
+			moves.append(second)
+
 			continue
 
-		# No puede aterrizar sobre otro personaje
-		if !ignore_units and board.is_occupied(landing):
-			continue
+		# =====================================
+		# OBSTÁCULO
+		# =====================================
 
-		# Puede aterrizar sobre un enemigo
+		if board.has_obstacle(first):
 
-		moves.append(landing)
+			if !board.is_inside_board(second):
+				continue
+
+			# No puede saltar dos obstáculos.
+			if board.has_obstacle(second):
+				continue
+
+			# No puede caer sobre un compañero.
+			if board.is_occupied(second):
+				continue
+
+			# Puede caer sobre vacío o enemigo.
+			moves.append(second)
 
 	return moves
 
 
 func move_to(cell: Vector2i) -> bool:
 
-	var direction := cell - current_cell
+	if !alive:
+		return false
 
-	if abs(direction.x) == 2 or abs(direction.y) == 2:
+	if board == null:
+		return false
 
-		var jumped_cell := current_cell + Vector2i(
-			sign(direction.x),
-			sign(direction.y)
-		)
+	if !board.is_inside_board(cell):
+		return false
 
-		var enemy: Enemy = board.get_enemy(jumped_cell)
+	if board.has_obstacle(cell):
+		return false
+
+	if board.is_occupied(cell):
+		return false
+
+	if cell not in get_possible_moves():
+		return false
+
+	var direction: Vector2i = Vector2i(
+		sign(cell.x - current_cell.x),
+		sign(cell.y - current_cell.y)
+	)
+
+	var distance: int = maxi(
+		abs(cell.x - current_cell.x),
+		abs(cell.y - current_cell.y)
+	)
+
+	# =====================================
+	# CASILLA INTERMEDIA
+	# =====================================
+
+	if distance == 2:
+
+		var middle: Vector2i = current_cell + direction
+
+		var enemy: Enemy = board.get_enemy(middle)
 
 		if enemy != null:
 
 			enemy.take_damage(enemy.health)
 
-	return super.move_to(cell)
+	# =====================================
+	# CASILLA DESTINO
+	# =====================================
+
+	var target_enemy: Enemy = board.get_enemy(cell)
+
+	if target_enemy != null:
+
+		target_enemy.take_damage(target_enemy.health)
+
+	current_cell = cell
+
+	update_position()
+
+	print(name, " movido a ", cell)
+
+	return true

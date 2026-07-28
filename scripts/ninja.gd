@@ -8,43 +8,63 @@ func get_possible_moves_from(
 
 	var moves: Array[Vector2i] = []
 
-	var directions = [
-		Vector2i(2, 2),
-		Vector2i(2, -2),
-		Vector2i(-2, 2),
-		Vector2i(-2, -2)
+	var directions: Array[Vector2i] = [
+		Vector2i(1, 1),
+		Vector2i(1, -1),
+		Vector2i(-1, 1),
+		Vector2i(-1, -1)
 	]
 
-	for dir in directions:
+	for dir: Vector2i in directions:
 
-		var target = cell + dir
-		var middle = cell + dir / 2
+		var middle: Vector2i = cell + dir
 
-		# Fuera del tablero
-		if !board.is_inside_board(target):
+		if !board.is_inside_board(middle):
 			continue
 
-		# No puede saltar sobre obstáculos
+		# No puede atravesar obstáculos.
 		if board.has_obstacle(middle):
 			continue
 
-		# No puede saltar sobre personajes
+		# No puede atravesar personajes.
 		if !ignore_units and board.is_occupied(middle):
 			continue
 
-		# No puede saltar sobre enemigos
-		if !ignore_units and board.has_enemy(middle):
+		# =====================================
+		# ENEMIGO A 1 CASILLA
+		# Solo puede atacarlo.
+		# =====================================
+
+		if board.has_enemy(middle):
+
+			moves.append(middle)
 			continue
 
-		# No puede caer sobre obstáculos
+		# =====================================
+		# PERGAMINO A 1 CASILLA
+		# Puede recogerlo o saltarlo.
+		# =====================================
+
+		if board.has_scroll(middle):
+
+			moves.append(middle)
+
+		var target: Vector2i = cell + dir * 2
+
+		if !board.is_inside_board(target):
+			continue
+
+		# No puede caer sobre obstáculos.
 		if board.has_obstacle(target):
 			continue
 
-		# No puede caer sobre otro personaje
+		# No puede caer sobre otro personaje.
 		if !ignore_units and board.is_occupied(target):
 			continue
 
-		# Puede caer sobre un enemigo
+		# No puede caer sobre casillas destruidas.
+		if board.is_destroyed(target):
+			continue
 
 		moves.append(target)
 
