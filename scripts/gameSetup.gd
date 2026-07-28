@@ -9,6 +9,8 @@ var mouse_tile: TileMapLayer
 
 var scroll: Scroll
 
+var enemy_manager: EnemyManager
+
 var characters: Array[Character] = []
 
 var spawn_cells: Array[Vector2i] = [
@@ -23,13 +25,15 @@ func setup(
 	board_state: BoardState,
 	mouse_layer: TileMapLayer,
 	scroll_node: Scroll,
-	character_list: Array[Character]
+	character_list: Array[Character],
+	enemy_manager_node: EnemyManager
 ):
 
 	board = board_state
 	mouse_tile = mouse_layer
 	scroll = scroll_node
 	characters = character_list
+	enemy_manager = enemy_manager_node
 
 
 func start_game():
@@ -45,6 +49,8 @@ func start_game():
 	mouse_tile.ground_tile = board.ground_tile
 
 	spawn_characters()
+
+	enemy_manager.generate_enemies()
 
 	spawn_scroll()
 

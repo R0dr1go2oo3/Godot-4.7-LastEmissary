@@ -16,6 +16,7 @@ var scroll: Scroll
 @onready var turn_manager: TurnManager = $turnManager
 @onready var message_manager: MessageManager = $messageManager
 @onready var game_setup: GameSetup = $gameSetup
+@onready var enemy_manager: EnemyManager = $enemyManager
 
 
 func setup(
@@ -25,7 +26,13 @@ func setup(
 	mouse_layer: TileMapLayer,
 	moves_layer: TileMapLayer,
 	character_list: Array[Character],
-	scroll_node: Scroll
+	scroll_node: Scroll,
+	enemy_container: Node2D,
+	torreta_ortogonal_scene: PackedScene,
+	torreta_diagonal_scene: PackedScene,
+	guerrero_ortogonal_scene: PackedScene,
+	guerrero_diagonal_scene: PackedScene,
+	jefe_scene: PackedScene
 ):
 
 	board = board_state
@@ -39,6 +46,13 @@ func setup(
 	)
 
 	characters = character_list
+
+	for character in characters:
+
+		character.died.connect(
+			_on_character_died
+		)
+
 	robot = find_robot()
 
 	scroll = scroll_node
@@ -51,11 +65,26 @@ func setup(
 		characters
 	)
 
+	enemy_manager.setup(
+		board,
+		enemy_container,
+		torreta_ortogonal_scene,
+		torreta_diagonal_scene,
+		guerrero_ortogonal_scene,
+		guerrero_diagonal_scene,
+		jefe_scene
+	)
+
+	board.setup_enemy_manager(
+		enemy_manager
+	)
+
 	game_setup.setup(
 		board,
 		mouse_tile,
 		scroll,
-		characters
+		characters,
+		enemy_manager
 	)
 
 	game_setup.start_game()
@@ -120,7 +149,10 @@ func handle_right_click():
 	deselect()
 
 	if turn_manager.should_end_turn():
+
 		turn_manager.end_turn()
+
+		enemy_manager.enemy_turn()
 
 
 func select_piece(piece: Character):
@@ -131,7 +163,9 @@ func select_piece(piece: Character):
 	selected_character = piece
 	selected_character.selected = true
 
-	moves_tile.show_moves(piece.get_possible_moves())
+	moves_tile.show_moves(
+		piece.get_possible_moves()
+	)
 
 	print(piece.name, " seleccionado")
 
@@ -164,11 +198,59 @@ func move_selected(cell: Vector2i):
 		selected_character.current_cell
 	)
 
-	message_manager.check_scroll(selected_character)
+	message_manager.check_scroll(
+		selected_character
+	)
 
-	turn_manager.register_action(selected_character)
+	check_victory(
+		selected_character
+	)
+
+	turn_manager.register_action(
+		selected_character
+	)
 
 	deselect()
 
 	if turn_manager.should_end_turn():
+
 		turn_manager.end_turn()
+
+		enemy_manager.enemy_turn()
+
+
+func check_victory(character: Character):
+
+	if !character.is_carrier():
+		return
+
+	if character.current_cell.x != BoardState.ROWS - 1:
+		return
+
+	print("¡Victoria!")
+
+
+func _on_character_died(character: Character):
+
+	if character == selected_character:
+
+		deselect()
+
+	turn_manager.remove_character(character)
+
+	characters.erase(character)
+
+	if character == robot:
+
+		robot = null
+
+	character.queue_free()
+
+	check_defeat()
+
+
+func check_defeat():
+
+	if characters.is_empty():
+
+		print("¡Derrota!")

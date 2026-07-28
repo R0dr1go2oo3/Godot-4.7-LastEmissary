@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://dsd70aeytu5cv"]
+
+[ext_resource type="Script" uid="uid://buayukor1j4wf" path="res://scripts/jefe.gd" id="1_2w8do"]
+[ext_resource type="Texture2D" uid="uid://cycbds8j6axse" path="res://sprites/jefe.png" id="1_4euyg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ry7xg"]
+radius = 16.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2w8do"]
+atlas = ExtResource("1_4euyg")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ho5a"]
+atlas = ExtResource("1_4euyg")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7f01e"]
+atlas = ExtResource("1_4euyg")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wyeb1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2w8do")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ho5a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7f01e")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="jefe" type="Node2D" unique_id=124317621]
+script = ExtResource("1_2w8do")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=751813072]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1580082897]
+shape = SubResource("CircleShape2D_ry7xg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=2131626632]
+sprite_frames = SubResource("SpriteFrames_wyeb1")
+autoplay = "default"

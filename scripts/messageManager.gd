@@ -27,6 +27,9 @@ func setup(
 
 func check_scroll(character: Character):
 
+	if !character.alive:
+		return
+
 	if character.current_cell != scroll.current_cell:
 		return
 
@@ -43,6 +46,9 @@ func check_scroll(character: Character):
 
 func use_show(character: Character) -> bool:
 
+	if !character.alive:
+		return false
+
 	if !character.show_message():
 		return false
 
@@ -55,6 +61,9 @@ func use_show(character: Character) -> bool:
 		var target: Character = board.get_occupant(cell)
 
 		if target == null:
+			continue
+
+		if !target.alive:
 			continue
 
 		if target == character:
@@ -83,6 +92,9 @@ func get_carriers() -> Array[Character]:
 
 	for character in characters:
 
+		if !character.alive:
+			continue
+
 		if character.is_carrier():
 
 			carriers.append(character)
@@ -93,6 +105,9 @@ func get_carriers() -> Array[Character]:
 func has_carriers() -> bool:
 
 	for character in characters:
+
+		if !character.alive:
+			continue
 
 		if character.is_carrier():
 			return true

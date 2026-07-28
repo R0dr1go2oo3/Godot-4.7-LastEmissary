@@ -1,5 +1,6 @@
 extends Node2D
 
+
 @onready var game_manager = $manager
 
 @onready var board_state = $boardState
@@ -13,6 +14,14 @@ extends Node2D
 @onready var ninja: Character = $characters/Ninja
 @onready var sumo: Character = $characters/Sumo
 @onready var robot: Character = $characters/Robot
+
+@onready var enemy_container: Node2D = $enemy
+
+@export var torreta_ortogonal_scene: PackedScene
+@export var torreta_diagonal_scene: PackedScene
+@export var guerrero_ortogonal_scene: PackedScene
+@export var guerrero_diagonal_scene: PackedScene
+@export var jefe_scene: PackedScene
 
 @onready var scroll: Scroll = $items/pergamino
 
@@ -33,7 +42,13 @@ func _ready():
 		empty_tile,
 		select_tile,
 		characters,
-		scroll
+		scroll,
+		enemy_container,
+		torreta_ortogonal_scene,
+		torreta_diagonal_scene,
+		guerrero_ortogonal_scene,
+		guerrero_diagonal_scene,
+		jefe_scene
 	)
 
 

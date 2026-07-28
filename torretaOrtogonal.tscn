@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://bevq17s82uipk"]
+
+[ext_resource type="Texture2D" uid="uid://nd3eualva2fx" path="res://sprites/torretaOrtogonal.png" id="1_svo1w"]
+
+[sub_resource type="GDScript" id="GDScript_ryguw"]
+script/source = "extends Enemy
+
+
+func get_attack_cells_from(
+	cell: Vector2i
+) -> Array[Vector2i]:
+
+	var cells: Array[Vector2i] = []
+
+	var directions: Array[Vector2i] = [
+		Vector2i(1, 0),
+		Vector2i(-1, 0),
+		Vector2i(0, 1),
+		Vector2i(0, -1)
+	]
+
+	for dir in directions:
+
+		var target := cell + dir
+
+		if !board.is_inside_board(target):
+			continue
+
+		cells.append(target)
+
+	return cells
+
+
+func attack():
+
+	for cell in get_attack_cells():
+
+		var character: Character = board.get_occupant(cell)
+
+		if character == null:
+			continue
+
+		character.take_damage(1)
+
+		print(
+			name,
+			\" atacó a \",
+			character.name
+		)
+
+
+func take_turn():
+
+	attack()
+"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wyeb1"]
+radius = 16.0
+height = 32.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yq0rh"]
+atlas = ExtResource("1_svo1w")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2b380"]
+atlas = ExtResource("1_svo1w")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dko1y"]
+atlas = ExtResource("1_svo1w")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ry7xg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yq0rh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2b380")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dko1y")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="torretaOrtogonal" type="Node2D" unique_id=194100834]
+script = SubResource("GDScript_ryguw")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1863860825]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1707093275]
+shape = SubResource("CapsuleShape2D_wyeb1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CharacterBody2D" unique_id=1980429035]
+sprite_frames = SubResource("SpriteFrames_ry7xg")
+autoplay = "default"

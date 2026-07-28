@@ -17,9 +17,15 @@
 [ext_resource type="Script" uid="uid://bbd0mpvsk0pvs" path="res://scripts/manager.gd" id="14_w48qg"]
 [ext_resource type="PackedScene" uid="uid://bfl76kgasvgef" path="res://pergamino.tscn" id="15_2cqfq"]
 [ext_resource type="Script" uid="uid://bjwb1ggp8jn0a" path="res://scripts/pergamino.gd" id="16_yaehf"]
+[ext_resource type="PackedScene" uid="uid://cayct7t6oit8a" path="res://torretaDiagonal.tscn" id="17_0odxb"]
 [ext_resource type="Script" uid="uid://bp4jyty3attyj" path="res://scripts/turnManager.gd" id="18_82xsv"]
+[ext_resource type="PackedScene" uid="uid://bevq17s82uipk" path="res://torretaOrtogonal.tscn" id="18_lswn8"]
+[ext_resource type="PackedScene" uid="uid://clgymjltqwlf3" path="res://guerreroOrtogonal.tscn" id="19_a6jrf"]
 [ext_resource type="Script" uid="uid://oiammo7qro36" path="res://scripts/messageManager.gd" id="19_getpj"]
 [ext_resource type="Script" uid="uid://bbqd5lpbfcxou" path="res://scripts/gameSetup.gd" id="20_ryguw"]
+[ext_resource type="PackedScene" uid="uid://dc64m5yu40lai" path="res://guerreroDiagonal.tscn" id="20_xuqvo"]
+[ext_resource type="Script" uid="uid://cr1fi8kgjpcle" path="res://scripts/enemyManager.gd" id="21_getpj"]
+[ext_resource type="PackedScene" uid="uid://dsd70aeytu5cv" path="res://jefe.tscn" id="21_qsp4k"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4c57u"]
 texture = ExtResource("1_0xm2m")
@@ -168,6 +174,11 @@ sources/3 = SubResource("TileSetAtlasSource_0odxb")
 
 [node name="Main" type="Node2D" unique_id=1992131558]
 script = ExtResource("1_272bh")
+torreta_ortogonal_scene = ExtResource("18_lswn8")
+torreta_diagonal_scene = ExtResource("17_0odxb")
+guerrero_ortogonal_scene = ExtResource("19_a6jrf")
+guerrero_diagonal_scene = ExtResource("20_xuqvo")
+jefe_scene = ExtResource("21_qsp4k")
 
 [node name="boardState" type="Node2D" parent="." unique_id=1707457842]
 script = ExtResource("2_vivmo")
@@ -203,6 +214,8 @@ script = ExtResource("9_w48qg")
 [node name="pergamino" parent="items" unique_id=361437145 instance=ExtResource("15_2cqfq")]
 script = ExtResource("16_yaehf")
 
+[node name="enemy" type="Node2D" parent="." unique_id=850244888]
+
 [node name="manager" type="Node2D" parent="." unique_id=1345210161]
 script = ExtResource("14_w48qg")
 
@@ -214,6 +227,9 @@ script = ExtResource("19_getpj")
 
 [node name="gameSetup" type="Node2D" parent="manager" unique_id=2083940067]
 script = ExtResource("20_ryguw")
+
+[node name="enemyManager" type="Node2D" parent="manager" unique_id=1731646586]
+script = ExtResource("21_getpj")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1145108508]
 position = Vector2(824, 400)

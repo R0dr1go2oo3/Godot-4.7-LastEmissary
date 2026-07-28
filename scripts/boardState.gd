@@ -12,6 +12,8 @@ var grid: Dictionary = {}
 var ground_tile: TileMapLayer
 var obstacle_tile: TileMapLayer
 
+var enemy_manager: EnemyManager
+
 
 # =====================================
 # SETUP
@@ -24,6 +26,11 @@ func setup(
 
 	ground_tile = ground_layer
 	obstacle_tile = obstacle_layer
+
+
+func setup_enemy_manager(manager: EnemyManager):
+
+	enemy_manager = manager
 
 
 func create_board():
@@ -66,6 +73,51 @@ func is_inside_board(cell: Vector2i) -> bool:
 	)
 
 
+func is_cell_free(cell: Vector2i) -> bool:
+
+	if !is_inside_board(cell):
+		return false
+
+	if has_obstacle(cell):
+		return false
+
+	if is_occupied(cell):
+		return false
+
+	if has_enemy(cell):
+		return false
+
+	return true
+
+
+func get_random_free_cell(
+	min_column: int,
+	max_column: int
+) -> Vector2i:
+
+	var candidates: Array[Vector2i] = []
+
+	for x in range(min_column, max_column + 1):
+
+		for y in range(COLUMNS):
+
+			var cell := Vector2i(x, y)
+
+			if is_cell_free(cell):
+
+				candidates.append(cell)
+
+	if candidates.is_empty():
+
+		push_error("No hay casillas libres.")
+
+		return Vector2i.ZERO
+
+	candidates.shuffle()
+
+	return candidates[0]
+
+
 # =====================================
 # OCUPANTES
 # =====================================
@@ -78,17 +130,17 @@ func is_occupied(cell: Vector2i) -> bool:
 	return grid[cell]["occupant"] != null
 
 
-func get_occupant(cell: Vector2i):
+func get_occupant(cell: Vector2i) -> Character:
 
 	if !is_inside_board(cell):
 		return null
 
-	return grid[cell]["occupant"]
+	return grid[cell]["occupant"] as Character
 
 
 func set_occupant(
 	cell: Vector2i,
-	unit
+	unit: Character
 ):
 
 	if !is_inside_board(cell):
@@ -123,10 +175,30 @@ func move_occupant(
 	if !is_inside_board(new_cell):
 		return
 
-	var unit = grid[old_cell]["occupant"]
+	var unit: Character = grid[old_cell]["occupant"] as Character
 
 	grid[old_cell]["occupant"] = null
 	grid[new_cell]["occupant"] = unit
+
+
+# =====================================
+# ENEMIGOS
+# =====================================
+
+func has_enemy(cell: Vector2i) -> bool:
+
+	if enemy_manager == null:
+		return false
+
+	return enemy_manager.has_enemy(cell)
+
+
+func get_enemy(cell: Vector2i) -> Enemy:
+
+	if enemy_manager == null:
+		return null
+
+	return enemy_manager.get_enemy_at(cell)
 
 
 # =====================================
@@ -254,19 +326,7 @@ func can_reach_goal(character: Character) -> bool:
 
 func get_random_scroll_cell() -> Vector2i:
 
-	while true:
-
-		var cell := Vector2i(
-			randi_range(3, 19),
-			randi_range(0, COLUMNS - 1)
-		)
-
-		if has_obstacle(cell):
-			continue
-
-		if is_occupied(cell):
-			continue
-
-		return cell
-
-	return Vector2i.ZERO
+	return get_random_free_cell(
+		3,
+		19
+	)

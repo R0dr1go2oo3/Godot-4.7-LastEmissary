@@ -2,6 +2,8 @@ extends Node2D
 
 class_name Character
 
+signal died(character: Character)
+
 
 @export var max_health := 1
 @export var actions_per_turn := 1
@@ -15,7 +17,7 @@ var board: BoardState = null
 var current_cell: Vector2i
 
 var selected := false
-
+var alive := true
 
 
 func setup_board(board_state: BoardState):
@@ -23,15 +25,15 @@ func setup_board(board_state: BoardState):
 	board = board_state
 
 
-
 func spawn(cell: Vector2i):
 
 	current_cell = cell
 
 	health = max_health
+	alive = true
+	has_message = false
 
 	update_position()
-
 
 
 func update_position():
@@ -42,8 +44,10 @@ func update_position():
 	position = board.ground_tile.map_to_local(current_cell)
 
 
-
 func move_to(cell: Vector2i) -> bool:
+
+	if !alive:
+		return false
 
 	if board == null:
 		return false
@@ -75,11 +79,9 @@ func move_to(cell: Vector2i) -> bool:
 	return true
 
 
-
 func get_possible_moves() -> Array[Vector2i]:
 
 	return get_possible_moves_from(current_cell)
-
 
 
 func get_possible_moves_from(
@@ -90,19 +92,34 @@ func get_possible_moves_from(
 	return []
 
 
+# =====================================
+# VIDA
+# =====================================
 
 func take_damage(amount: int):
 
+	if !alive:
+		return
+
 	health -= amount
 
-	print(name, " recibe ", amount, " de daño. Vida: ", health)
+	print(
+		name,
+		" recibe ",
+		amount,
+		" de daño. Vida: ",
+		health
+	)
 
 	if health <= 0:
+
 		die()
 
 
-
 func heal(amount: int):
+
+	if !alive:
+		return
 
 	health = min(
 		health + amount,
@@ -110,16 +127,24 @@ func heal(amount: int):
 	)
 
 
-
 func die():
 
+	if !alive:
+		return
+
+	alive = false
+
+	drop_message()
+
 	if board != null:
+
 		board.remove_occupant(current_cell)
 
-	print(name, " ha muerto")
+	selected = false
 
-	queue_free()
+	print(name, " ha muerto.")
 
+	died.emit(self)
 
 
 # =====================================
