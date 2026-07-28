@@ -5,6 +5,8 @@ class_name TurnManager
 
 var turn := 1
 
+var board: BoardState = null
+
 var robot: Character = null
 var characters: Array[Character] = []
 
@@ -13,9 +15,12 @@ var pieces_acted: Array[Character] = []
 
 
 func setup(
+	board_state: BoardState,
 	robot_character: Character,
 	character_list: Array[Character]
 ):
+
+	board = board_state
 
 	robot = robot_character
 	characters = character_list
@@ -118,5 +123,9 @@ func end_turn():
 
 	pieces_acted.clear()
 	robot_actions = 0
+
+	if turn % 4 == 0:
+
+		board.destroy_next_columns(2)
 
 	print("Turno:", turn)

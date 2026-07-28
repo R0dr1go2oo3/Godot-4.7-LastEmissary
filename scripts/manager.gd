@@ -23,6 +23,7 @@ func setup(
 	board_state: BoardState,
 	ground_tile: TileMapLayer,
 	obstacle_tile: TileMapLayer,
+	destroyed_tile: TileMapLayer,
 	mouse_layer: TileMapLayer,
 	moves_layer: TileMapLayer,
 	character_list: Array[Character],
@@ -42,7 +43,8 @@ func setup(
 
 	board.setup(
 		ground_tile,
-		obstacle_tile
+		obstacle_tile,
+		destroyed_tile
 	)
 
 	characters = character_list
@@ -58,6 +60,7 @@ func setup(
 	scroll = scroll_node
 
 	turn_manager.setup(
+		board,
 		robot,
 		characters
 	)

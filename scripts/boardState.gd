@@ -11,6 +11,9 @@ var grid: Dictionary = {}
 
 var ground_tile: TileMapLayer
 var obstacle_tile: TileMapLayer
+var destroyed_tile: TileMapLayer
+
+var destroyed_columns := 0
 
 var enemy_manager: EnemyManager
 var scroll: Scroll
@@ -22,11 +25,13 @@ var scroll: Scroll
 
 func setup(
 	ground_layer: TileMapLayer,
-	obstacle_layer: TileMapLayer
+	obstacle_layer: TileMapLayer,
+	destroyed_layer: TileMapLayer
 ):
 
 	ground_tile = ground_layer
 	obstacle_tile = obstacle_layer
+	destroyed_tile = destroyed_layer
 
 
 func setup_enemy_manager(manager: EnemyManager):
@@ -44,6 +49,10 @@ func create_board():
 	grid.clear()
 
 	ground_tile.clear()
+	obstacle_tile.clear()
+	destroyed_tile.clear()
+
+	destroyed_columns = 0
 
 	for x in range(ROWS):
 
@@ -54,7 +63,8 @@ func create_board():
 			grid[cell] = {
 				"type": "Ground",
 				"occupant": null,
-				"obstacle": false
+				"obstacle": false,
+				"destroyed": false
 			}
 
 			ground_tile.set_cell(
@@ -79,9 +89,20 @@ func is_inside_board(cell: Vector2i) -> bool:
 	)
 
 
+func is_destroyed(cell: Vector2i) -> bool:
+
+	if !is_inside_board(cell):
+		return true
+
+	return grid[cell]["destroyed"]
+
+
 func is_cell_free(cell: Vector2i) -> bool:
 
 	if !is_inside_board(cell):
+		return false
+
+	if is_destroyed(cell):
 		return false
 
 	if has_obstacle(cell):
@@ -145,7 +166,6 @@ func get_occupant(cell: Vector2i) -> Character:
 		return null
 
 	return grid[cell]["occupant"] as Character
-
 
 func set_occupant(
 	cell: Vector2i,
@@ -220,6 +240,61 @@ func has_scroll(cell: Vector2i) -> bool:
 		return false
 
 	return scroll.current_cell == cell
+
+
+# =====================================
+# DESTRUCCIÓN
+# =====================================
+
+func destroy_next_columns(amount := 2):
+
+	for x in range(
+		destroyed_columns,
+		min(destroyed_columns + amount, ROWS)
+	):
+
+		destroy_column(x)
+
+	destroyed_columns += amount
+
+
+func destroy_column(column: int):
+
+	for y in range(COLUMNS):
+
+		var cell := Vector2i(column, y)
+
+		grid[cell]["destroyed"] = true
+
+		ground_tile.erase_cell(cell)
+		obstacle_tile.erase_cell(cell)
+
+		destroyed_tile.set_cell(
+			cell,
+			4,
+			Vector2i.ZERO,
+			0
+		)
+
+		if has_obstacle(cell):
+
+			remove_obstacle(cell)
+
+		var character := get_occupant(cell)
+
+		if character != null:
+
+			character.die()
+
+		var enemy := get_enemy(cell)
+
+		if enemy != null:
+
+			enemy.die()
+
+		if has_scroll(cell):
+
+			scroll.collect()
 
 
 # =====================================
@@ -337,6 +412,9 @@ func can_reach_goal(character: Character) -> bool:
 		for next: Vector2i in moves:
 
 			if visited.has(next):
+				continue
+
+			if is_destroyed(next):
 				continue
 
 			visited[next] = true

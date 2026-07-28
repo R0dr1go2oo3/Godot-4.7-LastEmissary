@@ -7,6 +7,7 @@ extends Node2D
 
 @onready var full_tile: TileMapLayer = $boardState/groundTile
 @onready var obstacle_tile: TileMapLayer = $boardState/obstacleTile
+@onready var destroyed_tile: TileMapLayer = $boardState/destroyedTile
 @onready var empty_tile: TileMapLayer = $boardState/mouseTile
 @onready var select_tile: TileMapLayer = $boardState/movesTile
 
@@ -39,6 +40,7 @@ func _ready():
 		board_state,
 		full_tile,
 		obstacle_tile,
+		destroyed_tile,
 		empty_tile,
 		select_tile,
 		characters,
