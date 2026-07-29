@@ -254,6 +254,9 @@ func has_scroll(cell: Vector2i) -> bool:
 	if scroll == null:
 		return false
 
+	if !scroll.visible:
+		return false
+
 	return scroll.current_cell == cell
 
 
@@ -261,7 +264,39 @@ func has_scroll(cell: Vector2i) -> bool:
 # DESTRUCCIÓN
 # =====================================
 
+func cleanup_destroyed_cells():
+
+	for cell in grid.keys():
+
+		if !grid[cell]["destroyed"]:
+			continue
+
+		if has_obstacle(cell):
+
+			remove_obstacle(cell)
+
+		var character := get_occupant(cell)
+
+		if character != null:
+
+			character.die()
+
+		var enemy := get_enemy(cell)
+
+		if enemy != null:
+
+			enemy.die()
+
+		if has_scroll(cell):
+
+			scroll.collect()
+
+
 func destroy_next_columns(amount := 2):
+
+	# Limpia cualquier elemento que haya quedado
+	# en una zona ya destruida.
+	cleanup_destroyed_cells()
 
 	for x in range(
 		destroyed_columns,

@@ -48,6 +48,10 @@ func can_move(cell: Vector2i) -> bool:
 	if !board.is_inside_board(cell):
 		return false
 
+	# NUEVO: no puede entrar en casillas destruidas.
+	if board.is_destroyed(cell):
+		return false
+
 	if board.has_obstacle(cell):
 		return false
 

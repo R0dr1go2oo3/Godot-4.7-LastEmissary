@@ -123,21 +123,27 @@ func update_hud():
 
 			if turn_manager.turn % 2 != 0:
 
-				text += "Robot : Recargando\n"
+				text += "Robot : Recargando"
 
 			else:
 
-				text += "Robot : %d/3 acciones\n" % turn_manager.get_robot_actions()
+				text += "Robot : %d/3 acciones" % turn_manager.get_robot_actions()
 
 		else:
 
 			if turn_manager.has_acted(character):
 
-				text += character.name + " : Ya actuó\n"
+				text += character.name + " : Ya actuó"
 
 			else:
 
-				text += character.name + " : Disponible\n"
+				text += character.name + " : Disponible"
+
+		if character.is_carrier():
+
+			text += " | Portador"
+
+		text += "\n"
 
 	hud.set_actions(text)
 

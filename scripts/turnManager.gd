@@ -151,6 +151,10 @@ func end_turn():
 	pieces_acted.clear()
 	robot_actions = 0
 
+	# Limpia cualquier elemento que haya quedado
+	# por error en zonas destruidas.
+	board.cleanup_destroyed_cells()
+
 	if turn % 4 == 0:
 
 		board.destroy_next_columns(2)
