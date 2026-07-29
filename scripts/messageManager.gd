@@ -44,6 +44,34 @@ func check_scroll(character: Character):
 # MOSTRAR
 # =====================================
 
+func can_use_show(character: Character) -> bool:
+
+	if !character.alive:
+		return false
+
+	if !character.is_carrier():
+		return false
+
+	for cell in get_adjacent_cells(character.current_cell):
+
+		var target: Character = board.get_occupant(cell)
+
+		if target == null:
+			continue
+
+		if !target.alive:
+			continue
+
+		if target == character:
+			continue
+
+		if !target.is_carrier():
+
+			return true
+
+	return false
+
+
 func use_show(character: Character) -> bool:
 
 	if !character.alive:

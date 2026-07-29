@@ -61,6 +61,7 @@ func setup(
 
 	turn_manager.setup(
 		board,
+		message_manager,
 		robot,
 		characters
 	)
