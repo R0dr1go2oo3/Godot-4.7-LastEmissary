@@ -18,6 +18,12 @@ var scroll: Scroll
 @onready var game_setup: GameSetup = $gameSetup
 @onready var enemy_manager: EnemyManager = $enemyManager
 
+# Como logManager es hermano de manager, no hijo.
+@onready var log_manager: LogManager = $"../logManager"
+
+# El HUD está en el CanvasLayer.
+@onready var hud: HUD = $"../CanvasLayer"
+
 
 func setup(
 	board_state: BoardState,
@@ -47,13 +53,14 @@ func setup(
 		destroyed_tile
 	)
 
+	# Configurar sistema de logs.
+	log_manager.setup(hud)
+	board.setup_log_manager(log_manager)
+
 	characters = character_list
 
 	for character in characters:
-
-		character.died.connect(
-			_on_character_died
-		)
+		character.died.connect(_on_character_died)
 
 	robot = find_robot()
 
@@ -82,13 +89,8 @@ func setup(
 		jefe_scene
 	)
 
-	board.setup_enemy_manager(
-		enemy_manager
-	)
-
-	board.setup_scroll(
-		scroll
-	)
+	board.setup_enemy_manager(enemy_manager)
+	board.setup_scroll(scroll)
 
 	game_setup.setup(
 		board,
@@ -99,6 +101,45 @@ func setup(
 	)
 
 	game_setup.start_game()
+
+	if hud != null:
+		update_hud()
+
+
+func update_hud():
+
+	hud.set_turn(turn_manager.turn)
+
+	var text := ""
+
+	for character in characters:
+
+		if !character.alive:
+
+			text += character.name + " : Muerto\n"
+			continue
+
+		if character == robot:
+
+			if turn_manager.turn % 2 != 0:
+
+				text += "Robot : Recargando\n"
+
+			else:
+
+				text += "Robot : %d/3 acciones\n" % turn_manager.get_robot_actions()
+
+		else:
+
+			if turn_manager.has_acted(character):
+
+				text += character.name + " : Ya actuó\n"
+
+			else:
+
+				text += character.name + " : Disponible\n"
+
+	hud.set_actions(text)
 
 
 func find_robot() -> Character:
@@ -159,11 +200,17 @@ func handle_right_click():
 
 	deselect()
 
+	update_hud()
+
 	if turn_manager.should_end_turn():
 
 		turn_manager.end_turn()
 
+		update_hud()
+
 		enemy_manager.enemy_turn()
+
+		update_hud()
 
 
 func select_piece(piece: Character):
@@ -178,7 +225,9 @@ func select_piece(piece: Character):
 		piece.get_possible_moves()
 	)
 
-	print(piece.name, " seleccionado")
+	board.add_log(
+		piece.name + " seleccionado."
+	)
 
 
 func deselect():
@@ -231,11 +280,17 @@ func move_selected(cell: Vector2i):
 
 	deselect()
 
+	update_hud()
+
 	if turn_manager.should_end_turn():
 
 		turn_manager.end_turn()
 
+		update_hud()
+
 		enemy_manager.enemy_turn()
+
+		update_hud()
 
 
 func check_victory(character: Character):
@@ -246,7 +301,7 @@ func check_victory(character: Character):
 	if character.current_cell.x != BoardState.ROWS - 1:
 		return
 
-	print("¡Victoria!")
+	board.add_log("¡Victoria!")
 
 
 func _on_character_died(character: Character):
@@ -263,6 +318,8 @@ func _on_character_died(character: Character):
 
 	character.queue_free()
 
+	update_hud()
+
 	check_defeat()
 
 
@@ -270,4 +327,4 @@ func check_defeat():
 
 	if characters.is_empty():
 
-		print("¡Derrota!")
+		board.add_log("¡Derrota!")

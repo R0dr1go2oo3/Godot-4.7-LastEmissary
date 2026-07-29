@@ -168,4 +168,4 @@ func die():
 
 			board.enemy_manager.remove_enemy(enemy)
 
-	print(name, " ha muerto.")
+		board.add_log(name + " ha muerto.")

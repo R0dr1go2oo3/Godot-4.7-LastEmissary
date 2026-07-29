@@ -165,6 +165,8 @@ func move_to(cell: Vector2i) -> bool:
 
 	update_position()
 
-	print(name, " movido a ", cell)
+	board.add_log(
+		name + " movido a " + str(cell)
+	)
 
 	return true

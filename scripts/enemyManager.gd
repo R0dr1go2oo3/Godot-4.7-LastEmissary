@@ -65,7 +65,7 @@ func generate_enemies():
 	generate_boss()
 
 
-func spawn_orthogonal_turrets():
+func spawn_orthogonal_turrets() -> void:
 
 	for i in ORTHOGONAL_TURRETS:
 
@@ -74,7 +74,7 @@ func spawn_orthogonal_turrets():
 		)
 
 
-func spawn_diagonal_turrets():
+func spawn_diagonal_turrets() -> void:
 
 	for i in DIAGONAL_TURRETS:
 
@@ -83,7 +83,7 @@ func spawn_diagonal_turrets():
 		)
 
 
-func spawn_orthogonal_warriors():
+func spawn_orthogonal_warriors() -> void:
 
 	for i in ORTHOGONAL_WARRIORS:
 
@@ -92,7 +92,7 @@ func spawn_orthogonal_warriors():
 		)
 
 
-func spawn_diagonal_warriors():
+func spawn_diagonal_warriors() -> void:
 
 	for i in DIAGONAL_WARRIORS:
 
@@ -101,7 +101,7 @@ func spawn_diagonal_warriors():
 		)
 
 
-func generate_boss():
+func generate_boss() -> void:
 
 	for i in BOSSES:
 
@@ -178,6 +178,8 @@ func spawn_enemy(
 # =====================================
 
 func enemy_turn():
+
+	board.add_log("Comienza el turno enemigo.")
 
 	var current_enemies: Array[Enemy] = enemies.duplicate()
 

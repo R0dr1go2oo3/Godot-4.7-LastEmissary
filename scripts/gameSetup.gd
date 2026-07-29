@@ -54,6 +54,8 @@ func start_game():
 
 	spawn_scroll()
 
+	board.add_log("La partida ha comenzado.")
+
 
 func setup_characters():
 
@@ -116,6 +118,10 @@ func spawn_scroll():
 
 	scroll.setup(board)
 
-	scroll.spawn(
-		board.get_random_scroll_cell()
+	var cell := board.get_random_scroll_cell()
+
+	scroll.spawn(cell)
+
+	board.add_log(
+		"El pergamino apareció en " + str(cell) + "."
 	)

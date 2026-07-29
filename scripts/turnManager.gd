@@ -45,7 +45,7 @@ func can_act(piece: Character) -> bool:
 
 		if turn % 2 != 0:
 
-			print("El Robot está recargando.")
+			board.add_log("El Robot está recargando.")
 			return false
 
 		if robot_actions >= 3:
@@ -155,4 +155,36 @@ func end_turn():
 
 		board.destroy_next_columns(2)
 
-	print("Turno:", turn)
+	board.add_log("Comienza el turno " + str(turn) + ".")
+
+
+# =====================================
+# HUD
+# =====================================
+
+func get_characters() -> Array[Character]:
+
+	return characters
+
+
+func has_acted(character: Character) -> bool:
+
+	if character == null:
+		return false
+
+	if !character.alive:
+		return true
+
+	if character == robot:
+
+		if turn % 2 != 0:
+			return true
+
+		return robot_actions >= 3
+
+	return character in pieces_acted
+
+
+func get_robot_actions() -> int:
+
+	return robot_actions

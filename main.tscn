@@ -27,6 +27,8 @@
 [ext_resource type="PackedScene" uid="uid://dc64m5yu40lai" path="res://guerreroDiagonal.tscn" id="20_xuqvo"]
 [ext_resource type="Script" uid="uid://cr1fi8kgjpcle" path="res://scripts/enemyManager.gd" id="21_getpj"]
 [ext_resource type="PackedScene" uid="uid://dsd70aeytu5cv" path="res://jefe.tscn" id="21_qsp4k"]
+[ext_resource type="Script" uid="uid://byp2wj15hkfev" path="res://scripts/logManager.gd" id="28_qsp4k"]
+[ext_resource type="Script" uid="uid://8aw8ms54sqbt" path="res://scripts/hud.gd" id="28_xuqvo"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4c57u"]
 texture = ExtResource("1_0xm2m")
@@ -334,16 +336,21 @@ tile_set = SubResource("TileSet_kc8pj")
 [node name="characters" type="Node2D" parent="." unique_id=683362212]
 
 [node name="Paladin" parent="characters" unique_id=1405217417 instance=ExtResource("8_5vw27")]
+position = Vector2(-176, -288)
 
 [node name="Ninja" parent="characters" unique_id=288799154 instance=ExtResource("9_kek77")]
+position = Vector2(-288, -288)
 
 [node name="Sumo" parent="characters" unique_id=817593643 instance=ExtResource("10_4c57u")]
+position = Vector2(-232, -288)
 
 [node name="Robot" parent="characters" unique_id=1519225630 instance=ExtResource("11_efxa6")]
+position = Vector2(-352, -296)
 
 [node name="items" type="Node2D" parent="." unique_id=740138756]
 
 [node name="pergamino" parent="items" unique_id=361437145 instance=ExtResource("15_2cqfq")]
+position = Vector2(-360, -96)
 script = ExtResource("16_yaehf")
 
 [node name="enemy" type="Node2D" parent="." unique_id=850244888]
@@ -362,6 +369,44 @@ script = ExtResource("20_ryguw")
 
 [node name="enemyManager" type="Node2D" parent="manager" unique_id=1731646586]
 script = ExtResource("21_getpj")
+
+[node name="logManager" type="Node2D" parent="." unique_id=417209472]
+script = ExtResource("28_qsp4k")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1416114182]
+script = ExtResource("28_xuqvo")
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=1317195365]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -152.0
+offset_right = 491.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PanelContainer" unique_id=1445656861]
+layout_mode = 2
+
+[node name="VBoxContainerL" type="VBoxContainer" parent="CanvasLayer/PanelContainer/HBoxContainer" unique_id=262093750]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+
+[node name="actionsLabel" type="RichTextLabel" parent="CanvasLayer/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=854478247]
+custom_minimum_size = Vector2(400, 120)
+layout_mode = 2
+
+[node name="turnLabel" type="Label" parent="CanvasLayer/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=1775504679]
+layout_mode = 2
+
+[node name="VBoxContainerR" type="VBoxContainer" parent="CanvasLayer/PanelContainer/HBoxContainer" unique_id=2073746708]
+layout_mode = 2
+
+[node name="log" type="RichTextLabel" parent="CanvasLayer/PanelContainer/HBoxContainer/VBoxContainerR" unique_id=165837747]
+custom_minimum_size = Vector2(400, 140)
+layout_mode = 2
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1145108508]
 position = Vector2(824, 400)

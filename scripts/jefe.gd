@@ -73,7 +73,9 @@ func attack():
 		if character == null:
 			continue
 
-		print(name, " atacó a ", character.name)
+		board.add_log(
+			name + " atacó a " + character.name + "."
+		)
 
 		character.take_damage(1)
 

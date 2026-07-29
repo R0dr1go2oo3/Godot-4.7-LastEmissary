@@ -57,24 +57,26 @@ func move_to(cell: Vector2i) -> bool:
 
 	if board.has_obstacle(cell):
 
-		print("No puedes moverte sobre un obstáculo")
+		board.add_log("No puedes moverte sobre un obstáculo.")
 		return false
 
 	if board.is_occupied(cell):
 
-		print("Casilla ocupada")
+		board.add_log("Casilla ocupada.")
 		return false
 
 	if cell not in get_possible_moves():
 
-		print("Movimiento inválido")
+		board.add_log("Movimiento inválido.")
 		return false
 
 	current_cell = cell
 
 	update_position()
 
-	print(name, " movido a ", cell)
+	board.add_log(
+		name + " movido a " + str(cell)
+	)
 
 	return true
 
@@ -103,12 +105,11 @@ func take_damage(amount: int):
 
 	health -= amount
 
-	print(
-		name,
-		" recibe ",
-		amount,
-		" de daño. Vida: ",
-		health
+	board.add_log(
+		name + " recibe "
+		+ str(amount)
+		+ " de daño. Vida: "
+		+ str(health)
 	)
 
 	if health <= 0:
@@ -142,7 +143,9 @@ func die():
 
 	selected = false
 
-	print(name, " ha muerto.")
+	board.add_log(
+		name + " ha muerto."
+	)
 
 	died.emit(self)
 
@@ -183,7 +186,10 @@ func show_message() -> bool:
 
 	if !has_message:
 
-		print(name, " no es portador.")
+		board.add_log(
+			name + " no es portador."
+		)
+
 		return false
 
 	return true

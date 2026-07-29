@@ -37,7 +37,9 @@ func check_scroll(character: Character):
 
 		scroll.collect()
 
-		print(character.name, " ahora es portador.")
+		board.add_log(
+			character.name + " ahora es portador."
+		)
 
 
 # =====================================
@@ -80,7 +82,9 @@ func use_show(character: Character) -> bool:
 	if !character.show_message():
 		return false
 
-	print(character.name, " utilizó Mostrar.")
+	board.add_log(
+		character.name + " utilizó Mostrar."
+	)
 
 	var transmitted := false
 
@@ -99,13 +103,17 @@ func use_show(character: Character) -> bool:
 
 		if target.pick_message():
 
-			print(target.name, " recibió el mensaje.")
+			board.add_log(
+				target.name + " recibió el mensaje."
+			)
 
 			transmitted = true
 
 	if !transmitted:
 
-		print("Ningún personaje recibió el mensaje.")
+		board.add_log(
+			"Ningún personaje recibió el mensaje."
+		)
 
 	return true
 

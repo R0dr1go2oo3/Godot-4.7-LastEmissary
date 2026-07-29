@@ -18,6 +18,8 @@ var destroyed_columns := 0
 var enemy_manager: EnemyManager
 var scroll: Scroll
 
+var log_manager: LogManager
+
 
 # =====================================
 # SETUP
@@ -42,6 +44,18 @@ func setup_enemy_manager(manager: EnemyManager):
 func setup_scroll(scroll_node: Scroll):
 
 	scroll = scroll_node
+
+
+func setup_log_manager(manager: LogManager):
+
+	log_manager = manager
+
+
+func add_log(text: String):
+
+	if log_manager != null:
+
+		log_manager.log(text)
 
 
 func create_board():
@@ -167,6 +181,7 @@ func get_occupant(cell: Vector2i) -> Character:
 
 	return grid[cell]["occupant"] as Character
 
+
 func set_occupant(
 	cell: Vector2i,
 	unit: Character
@@ -256,6 +271,10 @@ func destroy_next_columns(amount := 2):
 		destroy_column(x)
 
 	destroyed_columns += amount
+
+	add_log(
+		"Se destruyeron %d columna(s)." % amount
+	)
 
 
 func destroy_column(column: int):
