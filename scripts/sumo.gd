@@ -59,7 +59,7 @@ func get_possible_moves_from(
 			if board.is_occupied(second):
 				continue
 
-			# Puede terminar en vacío o enemigo.
+			# Puede caer sobre vacío o enemigo.
 			moves.append(second)
 
 			continue
@@ -163,7 +163,7 @@ func move_to(cell: Vector2i) -> bool:
 
 	current_cell = cell
 
-	update_position()
+	animate_to_position()
 
 	board.add_log(
 		name + " movido a " + str(cell)

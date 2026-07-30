@@ -10,6 +10,10 @@ signal died(character: Character)
 @export var can_carry_message := true
 
 
+@export_range(50.0, 1000.0, 10.0)
+var pixels_per_second := 350.0
+
+
 var health := 0
 var has_message := false
 
@@ -44,6 +48,30 @@ func update_position():
 	position = board.ground_tile.map_to_local(current_cell)
 
 
+func animate_to_position():
+
+	if board == null:
+		return
+
+	var target := board.ground_tile.map_to_local(current_cell)
+
+	var distance := position.distance_to(target)
+
+	var duration := distance / pixels_per_second
+
+	var tween := create_tween()
+
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+
+	tween.tween_property(
+		self,
+		"position",
+		target,
+		duration
+	)
+
+
 func move_to(cell: Vector2i) -> bool:
 
 	if !alive:
@@ -72,7 +100,7 @@ func move_to(cell: Vector2i) -> bool:
 
 	current_cell = cell
 
-	update_position()
+	animate_to_position()
 
 	board.add_log(
 		name + " movido a " + str(cell)

@@ -11,7 +11,7 @@ var mouse_tile: TileMapLayer
 var moves_tile: TileMapLayer
 
 var scroll: Scroll
-
+var game_over := false
 
 @onready var turn_manager: TurnManager = $turnManager
 @onready var message_manager: MessageManager = $messageManager
@@ -162,6 +162,9 @@ func find_robot() -> Character:
 
 func handle_click(cell: Vector2i):
 
+	if game_over:
+		return
+
 	var piece: Character = board.get_occupant(cell)
 
 	if selected_character == null:
@@ -192,6 +195,9 @@ func handle_click(cell: Vector2i):
 
 
 func handle_right_click():
+
+	if game_over:
+		return
 
 	if selected_character == null:
 		return
@@ -280,6 +286,16 @@ func move_selected(cell: Vector2i):
 		selected_character
 	)
 
+	# Si hubo victoria o derrota,
+	# el turno termina inmediatamente.
+	if game_over:
+		return
+
+	check_defeat()
+
+	if game_over:
+		return
+
 	turn_manager.register_action(
 		selected_character
 	)
@@ -307,7 +323,25 @@ func check_victory(character: Character):
 	if character.current_cell.x != BoardState.ROWS - 1:
 		return
 
+	game_over = true
+
+	deselect()
+
 	board.add_log("¡Victoria!")
+
+
+func has_living_carrier() -> bool:
+
+	for character in characters:
+
+		if !character.alive:
+			continue
+
+		if character.is_carrier():
+
+			return true
+
+	return false
 
 
 func _on_character_died(character: Character):
@@ -331,6 +365,29 @@ func _on_character_died(character: Character):
 
 func check_defeat():
 
+	# Derrota si todos los personajes han muerto.
 	if characters.is_empty():
+
+		game_over = true
+
+		deselect()
+
+		board.add_log("¡Derrota!")
+		return
+
+	# Si el pergamino aún está en el tablero,
+	# todavía es posible ganar.
+	if scroll.visible:
+
+		return
+
+	# El pergamino ya fue recogido.
+	# Si no queda ningún portador vivo,
+	# la partida está perdida.
+	if !has_living_carrier():
+
+		game_over = true
+
+		deselect()
 
 		board.add_log("¡Derrota!")

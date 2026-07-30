@@ -7,6 +7,9 @@ class_name Enemy
 @export var actions_per_turn := 2
 
 
+const MOVE_TIME := 0.18
+
+
 var health := 0
 var alive := true
 
@@ -37,6 +40,26 @@ func update_position():
 	position = board.ground_tile.map_to_local(current_cell)
 
 
+func animate_to_position():
+
+	if board == null:
+		return
+
+	var target := board.ground_tile.map_to_local(current_cell)
+
+	var tween := create_tween()
+
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.set_ease(Tween.EASE_IN_OUT)
+
+	tween.tween_property(
+		self,
+		"position",
+		target,
+		MOVE_TIME
+	)
+
+
 func can_move(cell: Vector2i) -> bool:
 
 	if !alive:
@@ -48,7 +71,7 @@ func can_move(cell: Vector2i) -> bool:
 	if !board.is_inside_board(cell):
 		return false
 
-	# NUEVO: no puede entrar en casillas destruidas.
+	# No puede entrar en casillas destruidas.
 	if board.is_destroyed(cell):
 		return false
 
@@ -71,7 +94,7 @@ func move_to(cell: Vector2i) -> bool:
 
 	current_cell = cell
 
-	update_position()
+	animate_to_position()
 
 	return true
 
