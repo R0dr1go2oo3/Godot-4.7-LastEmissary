@@ -44,20 +44,10 @@ func can_act(piece: Character) -> bool:
 
 	if piece == robot:
 
-		if turn < next_robot_turn:
-
-			board.add_log("El Robot está recargando.")
+		if robot_is_recharging():
 			return false
 
-		var max_actions := 3
-
-		if robot.overload_active:
-			max_actions = 4
-
-		if robot_actions >= max_actions:
-			return false
-
-		return true
+		return robot_actions < get_robot_max_actions()
 
 	return piece not in pieces_acted
 
@@ -124,6 +114,15 @@ func end_turn():
 
 
 # =====================================
+# CONSULTAS
+# =====================================
+
+func robot_is_recharging() -> bool:
+
+	return turn < next_robot_turn
+
+
+# =====================================
 # HUD
 # =====================================
 
@@ -142,15 +141,10 @@ func has_acted(character: Character) -> bool:
 
 	if character == robot:
 
-		if turn < next_robot_turn:
+		if robot_is_recharging():
 			return true
 
-		var max_actions := 3
-
-		if robot.overload_active:
-			max_actions = 4
-
-		return robot_actions >= max_actions
+		return robot_actions >= get_robot_max_actions()
 
 	return character in pieces_acted
 

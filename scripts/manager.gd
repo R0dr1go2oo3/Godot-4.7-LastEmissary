@@ -123,16 +123,16 @@ func update_hud():
 
 		if character == robot:
 
-			if turn_manager.can_act(robot):
+			if turn_manager.robot_is_recharging():
+
+				text += "Robot : Recargando"
+
+			else:
 
 				text += "Robot : %d/%d acciones" % [
 					turn_manager.get_robot_actions(),
 					turn_manager.get_robot_max_actions()
 				]
-
-			else:
-
-				text += "Robot : Recargando"
 
 		else:
 
@@ -178,6 +178,11 @@ func handle_click(cell: Vector2i):
 			return
 
 		if !turn_manager.can_act(piece):
+
+			if piece == robot and turn_manager.robot_is_recharging():
+
+				board.add_log("El Robot está recargando.")
+
 			return
 
 		select_piece(piece)
@@ -191,6 +196,11 @@ func handle_click(cell: Vector2i):
 	if piece != null:
 
 		if !turn_manager.can_act(piece):
+
+			if piece == robot and turn_manager.robot_is_recharging():
+
+				board.add_log("El Robot está recargando.")
+
 			return
 
 		select_piece(piece)
@@ -225,7 +235,7 @@ func _unhandled_input(event: InputEvent):
 	if game_over:
 		return
 
-	if !event.is_action_pressed("overload"):
+	if !event.is_action_pressed("useHability"):
 		return
 
 	if selected_character == null:
@@ -235,6 +245,11 @@ func _unhandled_input(event: InputEvent):
 		return
 
 	if !turn_manager.can_act(robot):
+
+		if turn_manager.robot_is_recharging():
+
+			board.add_log("El Robot está recargando.")
+
 		return
 
 	if robot.activate_overload():
