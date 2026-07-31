@@ -70,7 +70,7 @@ func attack():
 
 		var character: Character = board.get_occupant(cell)
 
-		if character == null:
+		if !is_valid_target(character):
 			continue
 
 		board.add_log(

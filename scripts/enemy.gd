@@ -123,13 +123,36 @@ func get_attack_cells_from(
 	return []
 
 
+# =====================================
+# OBJETIVOS
+# =====================================
+
+func is_valid_target(character: Character) -> bool:
+
+	if character == null:
+		return false
+
+	if !character.alive:
+		return false
+
+	if character is Ninja:
+
+		var ninja := character as Ninja
+
+		if ninja.is_hidden():
+
+			return false
+
+	return true
+
+
 func has_target() -> bool:
 
 	for cell in get_attack_cells():
 
 		var character: Character = board.get_occupant(cell)
 
-		if character != null:
+		if is_valid_target(character):
 
 			return true
 
@@ -141,7 +164,7 @@ func can_attack(character: Character) -> bool:
 	if !alive:
 		return false
 
-	if character == null:
+	if !is_valid_target(character):
 		return false
 
 	return character.current_cell in get_attack_cells()

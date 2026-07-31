@@ -198,6 +198,7 @@ func handle_click(cell: Vector2i):
 
 	move_selected(cell)
 
+
 func handle_right_click():
 
 	if game_over:
@@ -230,17 +231,51 @@ func _unhandled_input(event: InputEvent):
 	if selected_character == null:
 		return
 
-	if selected_character != robot:
+	# =====================================
+	# Robot
+	# =====================================
+
+	if selected_character == robot:
+
+		if !turn_manager.can_act(robot):
+			return
+
+		if robot.activate_overload():
+
+			board.add_log("Robot activa Sobrecarga.")
+			update_hud()
+
 		return
 
-	if !turn_manager.can_act(robot):
-		return
+	# =====================================
+	# Ninja
+	# =====================================
 
-	if robot.activate_overload():
+	if selected_character is Ninja:
 
-		board.add_log("Robot activa Sobrecarga.")
+		var ninja := selected_character as Ninja
 
-		update_hud()
+		if ninja.activate_stealth():
+
+			board.add_log("Ninja prepara el Sigilo.")
+			update_hud()
+			return
+
+		if ninja.stealth_active:
+
+			board.add_log("El Ninja ya está oculto.")
+
+		elif ninja.stealth_prepared:
+
+			board.add_log("El Sigilo ya está preparado.")
+
+		else:
+
+			board.add_log(
+				"Sigilo en recarga. Restan "
+				+ str(ninja.stealth_steps_left)
+				+ " movimientos."
+			)
 
 
 func select_piece(piece: Character):
@@ -295,6 +330,27 @@ func move_selected(cell: Vector2i):
 	if enemy != null:
 
 		enemy.take_damage(enemy.health)
+
+	# =====================================
+	# Ninja
+	# =====================================
+
+	if selected_character is Ninja:
+
+		var ninja := selected_character as Ninja
+
+		var was_prepared := ninja.stealth_prepared
+		var was_hidden := ninja.stealth_active
+
+		ninja.finish_move()
+
+		if was_prepared:
+
+			board.add_log("Ninja entra en Sigilo.")
+
+		elif was_hidden:
+
+			board.add_log("Ninja sale del Sigilo.")
 
 	message_manager.check_scroll(
 		selected_character
@@ -384,7 +440,6 @@ func check_defeat():
 	# Si el pergamino aún está en el tablero,
 	# todavía es posible ganar.
 	if scroll.visible:
-
 		return
 
 	# El pergamino ya fue recogido.

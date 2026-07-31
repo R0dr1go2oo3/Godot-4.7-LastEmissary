@@ -1,58 +1,7 @@
 [gd_scene format=3 uid="uid://bevq17s82uipk"]
 
 [ext_resource type="Texture2D" uid="uid://nd3eualva2fx" path="res://sprites/torretaOrtogonal.png" id="1_svo1w"]
-
-[sub_resource type="GDScript" id="GDScript_ryguw"]
-script/source = "extends Enemy
-
-
-func get_attack_cells_from(
-	cell: Vector2i
-) -> Array[Vector2i]:
-
-	var cells: Array[Vector2i] = []
-
-	var directions: Array[Vector2i] = [
-		Vector2i(1, 0),
-		Vector2i(-1, 0),
-		Vector2i(0, 1),
-		Vector2i(0, -1)
-	]
-
-	for dir in directions:
-
-		var target := cell + dir
-
-		if !board.is_inside_board(target):
-			continue
-
-		cells.append(target)
-
-	return cells
-
-
-func attack():
-
-	for cell in get_attack_cells():
-
-		var character: Character = board.get_occupant(cell)
-
-		if character == null:
-			continue
-
-		character.take_damage(1)
-
-		print(
-			name,
-			\" atacó a \",
-			character.name
-		)
-
-
-func take_turn():
-
-	attack()
-"
+[ext_resource type="Script" uid="uid://futbxvjl3vty" path="res://scripts/torretaOrtogonal.gd" id="1_yq0rh"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wyeb1"]
 radius = 16.0
@@ -88,7 +37,7 @@ animations = [{
 }]
 
 [node name="torretaOrtogonal" type="Node2D" unique_id=194100834]
-script = SubResource("GDScript_ryguw")
+script = ExtResource("1_yq0rh")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1863860825]
 
