@@ -2,6 +2,28 @@ extends Character
 
 class_name Robot
 
+# ----------------------------
+# Sobrecarga
+# ----------------------------
+
+var overload_active := false
+
+func can_use_overload() -> bool:
+
+	return !overload_active
+
+func activate_overload() -> bool:
+
+	if !can_use_overload():
+		return false
+
+	overload_active = true
+	return true
+
+func finish_turn():
+
+	overload_active = false
+
 
 func get_possible_moves_from(
 	cell: Vector2i,
@@ -25,19 +47,14 @@ func get_possible_moves_from(
 
 		var target = cell + dir
 
-		# Fuera del tablero
 		if !board.is_inside_board(target):
 			continue
 
-		# No puede caer sobre obstáculos
 		if board.has_obstacle(target):
 			continue
 
-		# No puede caer sobre otro personaje
 		if !ignore_units and board.is_occupied(target):
 			continue
-
-		# Puede caer sobre un enemigo
 
 		moves.append(target)
 

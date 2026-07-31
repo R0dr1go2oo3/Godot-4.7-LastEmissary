@@ -2,16 +2,18 @@ extends Node
 
 class_name TurnManager
 
-
 var turn := 1
 
 var board: BoardState = null
 
-var robot: Character = null
+var robot: Robot = null
 var characters: Array[Character] = []
 
 var robot_actions := 0
 var pieces_acted: Array[Character] = []
+
+# Próximo turno en el que el Robot puede actuar.
+var next_robot_turn := 2
 
 
 func setup(
@@ -22,12 +24,14 @@ func setup(
 
 	board = board_state
 
-	robot = robot_character
+	robot = robot_character as Robot
 	characters = character_list
 
 	turn = 1
 	robot_actions = 0
 	pieces_acted.clear()
+
+	next_robot_turn = 2
 
 
 func can_act(piece: Character) -> bool:
@@ -40,12 +44,17 @@ func can_act(piece: Character) -> bool:
 
 	if piece == robot:
 
-		if turn % 2 != 0:
+		if turn < next_robot_turn:
 
 			board.add_log("El Robot está recargando.")
 			return false
 
-		if robot_actions >= 3:
+		var max_actions := 3
+
+		if robot.overload_active:
+			max_actions = 4
+
+		if robot_actions >= max_actions:
 			return false
 
 		return true
@@ -87,6 +96,17 @@ func remove_character(piece: Character):
 
 func end_turn():
 
+	if robot != null:
+
+		if turn == next_robot_turn:
+
+			if robot.overload_active:
+				next_robot_turn = turn + 3
+			else:
+				next_robot_turn = turn + 2
+
+		robot.finish_turn()
+
 	turn += 1
 
 	pieces_acted.clear()
@@ -122,10 +142,15 @@ func has_acted(character: Character) -> bool:
 
 	if character == robot:
 
-		if turn % 2 != 0:
+		if turn < next_robot_turn:
 			return true
 
-		return robot_actions >= 3
+		var max_actions := 3
+
+		if robot.overload_active:
+			max_actions = 4
+
+		return robot_actions >= max_actions
 
 	return character in pieces_acted
 
@@ -133,3 +158,11 @@ func has_acted(character: Character) -> bool:
 func get_robot_actions() -> int:
 
 	return robot_actions
+
+
+func get_robot_max_actions() -> int:
+
+	if robot != null and robot.overload_active:
+		return 4
+
+	return 3

@@ -2,7 +2,7 @@ extends Node
 
 var board: BoardState
 
-var robot: Character = null
+var robot: Robot = null
 var characters: Array[Character] = []
 
 var selected_character: Character = null
@@ -123,13 +123,16 @@ func update_hud():
 
 		if character == robot:
 
-			if turn_manager.turn % 2 != 0:
+			if turn_manager.can_act(robot):
 
-				text += "Robot : Recargando"
+				text += "Robot : %d/%d acciones" % [
+					turn_manager.get_robot_actions(),
+					turn_manager.get_robot_max_actions()
+				]
 
 			else:
 
-				text += "Robot : %d/3 acciones" % turn_manager.get_robot_actions()
+				text += "Robot : Recargando"
 
 		else:
 
@@ -150,12 +153,12 @@ func update_hud():
 	hud.set_actions(text)
 
 
-func find_robot() -> Character:
+func find_robot() -> Robot:
 
 	for character in characters:
 
 		if character.name == "Robot":
-			return character
+			return character as Robot
 
 	push_error("No se encontró un Robot.")
 
@@ -215,6 +218,30 @@ func handle_right_click():
 	deselect()
 
 	update_hud()
+
+
+func _unhandled_input(event: InputEvent):
+
+	if game_over:
+		return
+
+	if !event.is_action_pressed("overload"):
+		return
+
+	if selected_character == null:
+		return
+
+	if selected_character != robot:
+		return
+
+	if !turn_manager.can_act(robot):
+		return
+
+	if robot.activate_overload():
+
+		board.add_log("Robot activa Sobrecarga.")
+
+		update_hud()
 
 
 func select_piece(piece: Character):
