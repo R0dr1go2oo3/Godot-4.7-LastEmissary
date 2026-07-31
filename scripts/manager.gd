@@ -178,11 +178,6 @@ func handle_click(cell: Vector2i):
 			return
 
 		if !turn_manager.can_act(piece):
-
-			if piece == robot and turn_manager.robot_is_recharging():
-
-				board.add_log("El Robot está recargando.")
-
 			return
 
 		select_piece(piece)
@@ -196,18 +191,12 @@ func handle_click(cell: Vector2i):
 	if piece != null:
 
 		if !turn_manager.can_act(piece):
-
-			if piece == robot and turn_manager.robot_is_recharging():
-
-				board.add_log("El Robot está recargando.")
-
 			return
 
 		select_piece(piece)
 		return
 
 	move_selected(cell)
-
 
 func handle_right_click():
 
@@ -245,11 +234,6 @@ func _unhandled_input(event: InputEvent):
 		return
 
 	if !turn_manager.can_act(robot):
-
-		if turn_manager.robot_is_recharging():
-
-			board.add_log("El Robot está recargando.")
-
 		return
 
 	if robot.activate_overload():
