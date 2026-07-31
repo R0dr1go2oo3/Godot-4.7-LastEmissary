@@ -51,6 +51,11 @@ func get_possible_moves_from(
 
 		var target: Vector2i = cell + dir * 2
 
+		# Permitir un salto reducido hacia la meta.
+		if dir.x == 1 and target.x == BoardState.ROWS:
+
+			target = Vector2i(BoardState.ROWS - 1, target.y)
+
 		if !board.is_inside_board(target):
 			continue
 

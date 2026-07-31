@@ -6,7 +6,6 @@ class_name TurnManager
 var turn := 1
 
 var board: BoardState = null
-var message_manager: MessageManager = null
 
 var robot: Character = null
 var characters: Array[Character] = []
@@ -17,13 +16,11 @@ var pieces_acted: Array[Character] = []
 
 func setup(
 	board_state: BoardState,
-	message_manager_node: MessageManager,
 	robot_character: Character,
 	character_list: Array[Character]
 ):
 
 	board = board_state
-	message_manager = message_manager_node
 
 	robot = robot_character
 	characters = character_list
@@ -86,62 +83,6 @@ func remove_character(piece: Character):
 	if piece == robot:
 
 		robot = null
-
-
-func get_required_actions() -> int:
-
-	var required := 0
-
-	for character in characters:
-
-		if !character.alive:
-			continue
-
-		if character == robot:
-
-			if turn % 2 == 0:
-
-				required += 3
-
-		else:
-
-			required += 1
-
-	return required
-
-
-func get_current_actions() -> int:
-
-	return pieces_acted.size() + robot_actions
-
-
-func has_available_actions() -> bool:
-
-	for character in characters:
-
-		if !can_act(character):
-			continue
-
-		if !character.get_possible_moves().is_empty():
-			return true
-
-		if message_manager.can_use_show(character):
-			return true
-
-	return false
-
-
-func should_end_turn() -> bool:
-
-	if get_current_actions() >= get_required_actions():
-		return true
-
-	# Si ningún personaje puede realizar ninguna acción,
-	# el turno termina automáticamente.
-	if !has_available_actions():
-		return true
-
-	return false
 
 
 func end_turn():

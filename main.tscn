@@ -373,10 +373,10 @@ script = ExtResource("21_getpj")
 [node name="logManager" type="Node2D" parent="." unique_id=417209472]
 script = ExtResource("28_qsp4k")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1416114182]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1416114182]
 script = ExtResource("28_xuqvo")
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=1317195365]
+[node name="PanelContainer" type="PanelContainer" parent="HUD" unique_id=1317195365]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -387,27 +387,36 @@ offset_bottom = 48.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PanelContainer" unique_id=1445656861]
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD/PanelContainer" unique_id=1445656861]
 layout_mode = 2
 
-[node name="VBoxContainerL" type="VBoxContainer" parent="CanvasLayer/PanelContainer/HBoxContainer" unique_id=262093750]
+[node name="VBoxContainerL" type="VBoxContainer" parent="HUD/PanelContainer/HBoxContainer" unique_id=262093750]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 
-[node name="actionsLabel" type="RichTextLabel" parent="CanvasLayer/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=854478247]
+[node name="actionsLabel" type="RichTextLabel" parent="HUD/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=854478247]
 custom_minimum_size = Vector2(400, 120)
 layout_mode = 2
 
-[node name="turnLabel" type="Label" parent="CanvasLayer/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=1775504679]
+[node name="turnLabel" type="Label" parent="HUD/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=1775504679]
 layout_mode = 2
 
-[node name="VBoxContainerR" type="VBoxContainer" parent="CanvasLayer/PanelContainer/HBoxContainer" unique_id=2073746708]
+[node name="VBoxContainerC" type="VBoxContainer" parent="HUD/PanelContainer/HBoxContainer" unique_id=2073746708]
 layout_mode = 2
 
-[node name="log" type="RichTextLabel" parent="CanvasLayer/PanelContainer/HBoxContainer/VBoxContainerR" unique_id=165837747]
+[node name="log" type="RichTextLabel" parent="HUD/PanelContainer/HBoxContainer/VBoxContainerC" unique_id=165837747]
 custom_minimum_size = Vector2(400, 140)
 layout_mode = 2
+
+[node name="VBoxContainerR" type="VBoxContainer" parent="HUD/PanelContainer/HBoxContainer" unique_id=1132391743]
+layout_mode = 2
+
+[node name="finTurno" type="Button" parent="HUD/PanelContainer/HBoxContainer/VBoxContainerR" unique_id=1664497628]
+layout_mode = 2
+text = "Fin de turno"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1145108508]
 position = Vector2(824, 400)
 zoom = Vector2(0.7, 0.7)
+
+[connection signal="pressed" from="HUD/PanelContainer/HBoxContainer/VBoxContainerR/finTurno" to="HUD" method="_on_fin_turno_pressed"]

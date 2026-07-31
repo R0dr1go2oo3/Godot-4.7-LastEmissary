@@ -22,7 +22,7 @@ var game_over := false
 @onready var log_manager: LogManager = $"../logManager"
 
 # El HUD está en el CanvasLayer.
-@onready var hud: HUD = $"../CanvasLayer"
+@onready var hud: HUD = $"../HUD"
 
 
 func setup(
@@ -68,7 +68,6 @@ func setup(
 
 	turn_manager.setup(
 		board,
-		message_manager,
 		robot,
 		characters
 	)
@@ -103,6 +102,9 @@ func setup(
 	game_setup.start_game()
 
 	if hud != null:
+
+		hud.end_turn_pressed.connect(_on_end_turn_pressed)
+
 		update_hud()
 
 
@@ -214,16 +216,6 @@ func handle_right_click():
 
 	update_hud()
 
-	if turn_manager.should_end_turn():
-
-		turn_manager.end_turn()
-
-		update_hud()
-
-		enemy_manager.enemy_turn()
-
-		update_hud()
-
 
 func select_piece(piece: Character):
 
@@ -286,8 +278,6 @@ func move_selected(cell: Vector2i):
 		selected_character
 	)
 
-	# Si hubo victoria o derrota,
-	# el turno termina inmediatamente.
 	if game_over:
 		return
 
@@ -303,16 +293,6 @@ func move_selected(cell: Vector2i):
 	deselect()
 
 	update_hud()
-
-	if turn_manager.should_end_turn():
-
-		turn_manager.end_turn()
-
-		update_hud()
-
-		enemy_manager.enemy_turn()
-
-		update_hud()
 
 
 func check_victory(character: Character):
@@ -391,3 +371,17 @@ func check_defeat():
 		deselect()
 
 		board.add_log("¡Derrota!")
+
+
+func _on_end_turn_pressed():
+
+	if game_over:
+		return
+
+	deselect()
+
+	enemy_manager.enemy_turn()
+
+	turn_manager.end_turn()
+
+	update_hud()

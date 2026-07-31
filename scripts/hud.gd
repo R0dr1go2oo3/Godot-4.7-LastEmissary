@@ -2,10 +2,13 @@ extends CanvasLayer
 
 class_name HUD
 
+signal end_turn_pressed
+
 
 @onready var turn_label: Label = $PanelContainer/HBoxContainer/VBoxContainerL/turnLabel
 @onready var actions_label: RichTextLabel = $PanelContainer/HBoxContainer/VBoxContainerL/actionsLabel
-@onready var log_label: RichTextLabel = $PanelContainer/HBoxContainer/VBoxContainerR/log
+@onready var log_label: RichTextLabel = $PanelContainer/HBoxContainer/VBoxContainerC/log
+@onready var end_turn_button: Button = $PanelContainer/HBoxContainer/VBoxContainerR/finTurno
 
 
 func _ready() -> void:
@@ -18,6 +21,9 @@ func _ready() -> void:
 
 	if log_label == null:
 		push_error("No se encontró log.")
+
+	if end_turn_button == null:
+		push_error("No se encontró finTurno.")
 
 
 func set_turn(turn: int) -> void:
@@ -53,3 +59,8 @@ func clear_log() -> void:
 		return
 
 	log_label.clear()
+
+
+func _on_fin_turno_pressed() -> void:
+
+	end_turn_pressed.emit()
