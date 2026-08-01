@@ -10,13 +10,19 @@ var hud: HUD = null
 
 var history: Array[String] = []
 
+var enabled := true
+
 
 func setup(hud_node: HUD):
 
 	hud = hud_node
+	enabled = true
 
 
 func log(text: String):
+
+	if !enabled:
+		return
 
 	print(text)
 
@@ -39,6 +45,16 @@ func clear():
 func get_history() -> Array[String]:
 
 	return history.duplicate()
+
+
+func disable():
+
+	enabled = false
+
+
+func enable():
+
+	enabled = true
 
 
 func update_hud():

@@ -390,6 +390,7 @@ func _unhandled_input(event: InputEvent):
 			"Sumo utilizó Pisotón."
 		)
 
+		# El Pisotón consume la acción.
 		turn_manager.register_action(sumo)
 
 		deselect()
@@ -532,6 +533,8 @@ func check_victory(character: Character):
 
 	board.add_log("¡Victoria!")
 
+	log_manager.disable()
+
 
 func has_living_carrier() -> bool:
 
@@ -576,6 +579,9 @@ func check_defeat():
 		deselect()
 
 		board.add_log("¡Derrota!")
+
+		log_manager.disable()
+
 		return
 
 	# Si el pergamino aún está en el tablero,
@@ -594,6 +600,8 @@ func check_defeat():
 
 		board.add_log("¡Derrota!")
 
+		log_manager.disable()
+
 
 func _on_end_turn_pressed():
 
@@ -603,6 +611,11 @@ func _on_end_turn_pressed():
 	deselect()
 
 	enemy_manager.enemy_turn()
+
+	# La partida pudo terminar durante
+	# el turno enemigo.
+	if game_over:
+		return
 
 	turn_manager.end_turn()
 
