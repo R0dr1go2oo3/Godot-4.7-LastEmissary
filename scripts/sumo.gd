@@ -1,5 +1,78 @@
 extends Character
 
+class_name Sumo
+
+
+const STOMP_COOLDOWN := 10
+
+var stomp_ready := true
+var stomp_steps_left := 0
+
+
+func use_stomp() -> bool:
+
+	if !alive:
+		return false
+
+	if !stomp_ready:
+		return false
+
+	stomp_ready = false
+	stomp_steps_left = STOMP_COOLDOWN
+
+	var affected := false
+
+	var directions: Array[Vector2i] = [
+		Vector2i(-1, -1),
+		Vector2i(0, -1),
+		Vector2i(1, -1),
+		Vector2i(-1, 0),
+		Vector2i(1, 0),
+		Vector2i(-1, 1),
+		Vector2i(0, 1),
+		Vector2i(1, 1)
+	]
+
+	for dir in directions:
+
+		var cell := current_cell + dir
+
+		if !board.is_inside_board(cell):
+			continue
+
+		# Destruir obstáculo.
+		if board.has_obstacle(cell):
+
+			board.destroy_obstacle(cell)
+			affected = true
+
+		# Matar enemigo.
+		var enemy := board.get_enemy(cell)
+
+		if enemy != null:
+
+			enemy.take_damage(enemy.health)
+			affected = true
+
+	if !affected:
+
+		# No gastar la habilidad si no afectó nada.
+		stomp_ready = true
+		stomp_steps_left = 0
+
+	return affected
+
+
+func finish_move():
+
+	if stomp_steps_left > 0:
+
+		stomp_steps_left -= 1
+
+		if stomp_steps_left == 0:
+
+			stomp_ready = true
+
 
 func get_possible_moves_from(
 	cell: Vector2i,

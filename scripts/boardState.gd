@@ -162,6 +162,32 @@ func get_random_free_cell(
 	return candidates[0]
 
 
+func get_adjacent_cells(cell: Vector2i) -> Array[Vector2i]:
+
+	var cells: Array[Vector2i] = []
+
+	var directions: Array[Vector2i] = [
+		Vector2i(-1, -1),
+		Vector2i(0, -1),
+		Vector2i(1, -1),
+		Vector2i(-1, 0),
+		Vector2i(1, 0),
+		Vector2i(-1, 1),
+		Vector2i(0, 1),
+		Vector2i(1, 1)
+	]
+
+	for dir in directions:
+
+		var target := cell + dir
+
+		if is_inside_board(target):
+
+			cells.append(target)
+
+	return cells
+
+
 # =====================================
 # OCUPANTES
 # =====================================
@@ -386,6 +412,21 @@ func remove_obstacle(cell: Vector2i):
 	grid[cell]["obstacle"] = false
 
 	obstacle_tile.erase_cell(cell)
+
+
+func destroy_obstacle(cell: Vector2i):
+
+	if !is_inside_board(cell):
+		return
+
+	if !has_obstacle(cell):
+		return
+
+	remove_obstacle(cell)
+
+	add_log(
+		"Un obstáculo fue destruido."
+	)
 
 
 func create_obstacles():

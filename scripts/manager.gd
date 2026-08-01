@@ -134,6 +134,26 @@ func update_hud():
 					turn_manager.get_robot_max_actions()
 				]
 
+		elif character is Sumo:
+
+			var sumo := character as Sumo
+
+			if turn_manager.has_acted(character):
+
+				text += "Sumo : Ya actuó"
+
+			else:
+
+				text += "Sumo : Disponible"
+
+			if sumo.stomp_ready:
+
+				text += " | Pisotón listo"
+
+			else:
+
+				text += " | Pisotón (%d)" % sumo.stomp_steps_left
+
 		else:
 
 			if turn_manager.has_acted(character):
@@ -314,6 +334,41 @@ func _unhandled_input(event: InputEvent):
 
 		return
 
+	# =====================================
+	# Sumo
+	# =====================================
+
+	if selected_character is Sumo:
+
+		var sumo := selected_character as Sumo
+
+		if !sumo.stomp_ready:
+
+			board.add_log(
+				"Pisotón en recarga. Restan "
+				+ str(sumo.stomp_steps_left)
+				+ " movimientos."
+			)
+
+			return
+
+		if !sumo.use_stomp():
+
+			board.add_log(
+				"El Pisotón no tuvo efecto."
+			)
+
+			return
+
+		board.add_log(
+			"Sumo utilizó Pisotón."
+		)
+
+		# NO consume la acción.
+		update_hud()
+
+		return
+
 
 func select_piece(piece: Character):
 
@@ -388,6 +443,15 @@ func move_selected(cell: Vector2i):
 		elif was_hidden:
 
 			board.add_log("Ninja sale del Sigilo.")
+
+	# =====================================
+	# Sumo
+	# =====================================
+
+	if selected_character is Sumo:
+
+		var sumo := selected_character as Sumo
+		sumo.finish_move()
 
 	message_manager.check_scroll(
 		selected_character

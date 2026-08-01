@@ -18,7 +18,7 @@ var health := 0
 var has_message := false
 
 # Protección temporal contra el siguiente golpe.
-var protection := false
+var protection: bool = false
 
 var board: BoardState = null
 var current_cell: Vector2i
