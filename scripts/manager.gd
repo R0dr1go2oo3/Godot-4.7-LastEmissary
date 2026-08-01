@@ -367,6 +367,9 @@ func _unhandled_input(event: InputEvent):
 
 		var sumo := selected_character as Sumo
 
+		if !turn_manager.can_act(sumo):
+			return
+
 		if !sumo.stomp_ready:
 
 			board.add_log(
@@ -387,7 +390,10 @@ func _unhandled_input(event: InputEvent):
 			"Sumo utilizó Pisotón."
 		)
 
-		# NO consume la acción.
+		turn_manager.register_action(sumo)
+
+		deselect()
+
 		update_hud()
 
 		return
