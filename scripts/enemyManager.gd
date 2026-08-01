@@ -9,7 +9,7 @@ const DIAGONAL_TURRETS := 10
 const ORTHOGONAL_WARRIORS := 5
 const DIAGONAL_WARRIORS := 5
 
-const BOSSES := 1
+const BOSSES := 2
 
 
 var board: BoardState
@@ -88,7 +88,7 @@ func spawn_orthogonal_warriors() -> void:
 	for i in ORTHOGONAL_WARRIORS:
 
 		spawn_orthogonal_warrior(
-			board.get_random_free_cell(11, 23)
+			board.get_random_free_cell(9, 23)
 		)
 
 
@@ -97,7 +97,7 @@ func spawn_diagonal_warriors() -> void:
 	for i in DIAGONAL_WARRIORS:
 
 		spawn_diagonal_warrior(
-			board.get_random_free_cell(11, 23)
+			board.get_random_free_cell(9, 23)
 		)
 
 
@@ -106,7 +106,7 @@ func generate_boss() -> void:
 	for i in BOSSES:
 
 		spawn_boss(
-			board.get_random_free_cell(24, 24)
+			board.get_random_free_cell(19, 24)
 		)
 
 

@@ -84,23 +84,48 @@ func move_random():
 	move_to(moves[0])
 
 
+func move_for_attack() -> bool:
+
+	for move in get_possible_moves():
+
+		for cell in get_attack_cells_from(move):
+
+			var character: Character = board.get_occupant(cell)
+
+			if is_valid_target(character):
+
+				move_to(move)
+
+				attack()
+
+				return true
+
+	return false
+
+
 func take_turn():
 
 	if !alive:
 		return
 
-	# Si puede atacar desde el inicio,
-	# consume las dos acciones atacando.
+	# Ya tiene un objetivo.
 	if has_target():
 
 		attack()
 
 		return
 
-	# Primera acción: moverse.
+	# Buscar una casilla desde la que pueda
+	# atacar inmediatamente.
+	if move_for_attack():
+
+		return
+
+	# Movimiento normal.
 	move_random()
 
-	# Segunda acción: comprobar nuevamente.
+	# Tras moverse aleatoriamente,
+	# vuelve a intentar atacar.
 	if has_target():
 
 		attack()
