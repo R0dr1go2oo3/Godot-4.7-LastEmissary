@@ -8,9 +8,11 @@ class_name Robot
 
 var overload_active := false
 
+
 func can_use_overload() -> bool:
 
 	return !overload_active
+
 
 func activate_overload() -> bool:
 
@@ -18,11 +20,22 @@ func activate_overload() -> bool:
 		return false
 
 	overload_active = true
+
 	return true
+
 
 func finish_turn():
 
 	overload_active = false
+
+
+func get_overload_status() -> String:
+
+	if overload_active:
+
+		return "Sobrecarga activa"
+
+	return "Sobrecarga lista"
 
 
 func get_possible_moves_from(
@@ -32,7 +45,7 @@ func get_possible_moves_from(
 
 	var moves: Array[Vector2i] = []
 
-	var directions = [
+	var directions := [
 		Vector2i(-1, -1),
 		Vector2i(0, -1),
 		Vector2i(1, -1),
@@ -43,9 +56,9 @@ func get_possible_moves_from(
 		Vector2i(1, 1)
 	]
 
-	for dir in directions:
+	for dir: Vector2i in directions:
 
-		var target = cell + dir
+		var target := cell + dir
 
 		if !board.is_inside_board(target):
 			continue

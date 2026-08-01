@@ -98,8 +98,8 @@ func end_turn():
 		if !character.alive:
 			continue
 
-		# El escudo del Paladín dura
-		# hasta el inicio del siguiente turno.
+		# El escudo dura hasta el inicio
+		# del siguiente turno.
 		character.protection = false
 
 	if robot != null:

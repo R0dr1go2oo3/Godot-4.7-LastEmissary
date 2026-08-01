@@ -3,9 +3,23 @@ extends Character
 class_name Paladin
 
 
+const PROTECTION_COOLDOWN := 5
+
+# Puede usar el escudo cuando la habilidad está lista.
+var protection_ready := true
+
+# Movimientos restantes para recuperar la habilidad.
+var protection_steps_left := 0
+
+
+func can_use_protection() -> bool:
+
+	return alive and protection_ready
+
+
 func use_protection() -> bool:
 
-	if !alive:
+	if !can_use_protection():
 		return false
 
 	var protected_someone := false
@@ -44,7 +58,32 @@ func use_protection() -> bool:
 			target.name + " recibió un escudo."
 		)
 
+	if protected_someone:
+
+		protection_ready = false
+		protection_steps_left = PROTECTION_COOLDOWN
+
 	return protected_someone
+
+
+func finish_move():
+
+	if protection_steps_left > 0:
+
+		protection_steps_left -= 1
+
+		if protection_steps_left == 0:
+
+			protection_ready = true
+
+
+func get_protection_status() -> String:
+
+	if protection_ready:
+
+		return "Escudo listo"
+
+	return "Escudo listo en %d pasos" % protection_steps_left
 
 
 func get_possible_moves_from(
@@ -100,7 +139,10 @@ func get_possible_moves_from(
 		# Permitir un salto reducido hacia la meta.
 		if dir.x == 1 and target.x == BoardState.ROWS:
 
-			target = Vector2i(BoardState.ROWS - 1, target.y)
+			target = Vector2i(
+				BoardState.ROWS - 1,
+				target.y
+			)
 
 		if !board.is_inside_board(target):
 			continue

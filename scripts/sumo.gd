@@ -9,6 +9,15 @@ var stomp_ready := true
 var stomp_steps_left := 0
 
 
+func get_stomp_status() -> String:
+
+	if stomp_ready:
+
+		return "Pisotón listo"
+
+	return "Pisotón listo en %d pasos" % stomp_steps_left
+
+
 func use_stomp() -> bool:
 
 	if !alive:

@@ -83,6 +83,23 @@ func is_hidden() -> bool:
 	return stealth_active
 
 
+func get_stealth_status() -> String:
+
+	if stealth_active:
+
+		return "Oculto"
+
+	if stealth_prepared:
+
+		return "Sigilo preparado"
+
+	if stealth_ready:
+
+		return "Sigilo listo"
+
+	return "Sigilo listo en %d pasos" % stealth_steps_left
+
+
 func get_possible_moves_from(
 	cell: Vector2i,
 	ignore_units := false

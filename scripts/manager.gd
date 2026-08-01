@@ -134,6 +134,36 @@ func update_hud():
 					turn_manager.get_robot_max_actions()
 				]
 
+			text += " | " + robot.get_overload_status()
+
+		elif character is Ninja:
+
+			var ninja := character as Ninja
+
+			if turn_manager.has_acted(character):
+
+				text += "Ninja : Ya actuó"
+
+			else:
+
+				text += "Ninja : Disponible"
+
+			text += " | " + ninja.get_stealth_status()
+
+		elif character is Paladin:
+
+			var paladin := character as Paladin
+
+			if turn_manager.has_acted(character):
+
+				text += "Paladín : Ya actuó"
+
+			else:
+
+				text += "Paladín : Disponible"
+
+			text += " | " + paladin.get_protection_status()
+
 		elif character is Sumo:
 
 			var sumo := character as Sumo
@@ -146,13 +176,7 @@ func update_hud():
 
 				text += "Sumo : Disponible"
 
-			if sumo.stomp_ready:
-
-				text += " | Pisotón listo"
-
-			else:
-
-				text += " | Pisotón (%d)" % sumo.stomp_steps_left
+			text += " | " + sumo.get_stomp_status()
 
 		else:
 
@@ -268,6 +292,11 @@ func _unhandled_input(event: InputEvent):
 
 			board.add_log("Robot activa Sobrecarga.")
 			update_hud()
+			return
+
+		board.add_log(
+			robot.get_overload_status()
+		)
 
 		return
 
@@ -285,21 +314,9 @@ func _unhandled_input(event: InputEvent):
 			update_hud()
 			return
 
-		if ninja.stealth_active:
-
-			board.add_log("El Ninja ya está oculto.")
-
-		elif ninja.stealth_prepared:
-
-			board.add_log("El Sigilo ya está preparado.")
-
-		else:
-
-			board.add_log(
-				"Sigilo en recarga. Restan "
-				+ str(ninja.stealth_steps_left)
-				+ " movimientos."
-			)
+		board.add_log(
+			ninja.get_stealth_status()
+		)
 
 		return
 
@@ -314,23 +331,31 @@ func _unhandled_input(event: InputEvent):
 		if !turn_manager.can_act(paladin):
 			return
 
-		if !paladin.use_protection():
+		if paladin.use_protection():
+
+			board.add_log(
+				"Paladín protegió a los aliados cercanos."
+			)
+
+			turn_manager.register_action(paladin)
+
+			deselect()
+
+			update_hud()
+
+			return
+
+		if paladin.can_use_protection():
 
 			board.add_log(
 				"No hay aliados cercanos para proteger."
 			)
 
-			return
+		else:
 
-		board.add_log(
-			"Paladín protegió a los aliados cercanos."
-		)
-
-		turn_manager.register_action(paladin)
-
-		deselect()
-
-		update_hud()
+			board.add_log(
+				paladin.get_protection_status()
+			)
 
 		return
 
@@ -345,9 +370,7 @@ func _unhandled_input(event: InputEvent):
 		if !sumo.stomp_ready:
 
 			board.add_log(
-				"Pisotón en recarga. Restan "
-				+ str(sumo.stomp_steps_left)
-				+ " movimientos."
+				sumo.get_stomp_status()
 			)
 
 			return
@@ -445,12 +468,23 @@ func move_selected(cell: Vector2i):
 			board.add_log("Ninja sale del Sigilo.")
 
 	# =====================================
+	# Paladín
+	# =====================================
+
+	if selected_character is Paladin:
+
+		var paladin := selected_character as Paladin
+
+		paladin.finish_move()
+
+	# =====================================
 	# Sumo
 	# =====================================
 
 	if selected_character is Sumo:
 
 		var sumo := selected_character as Sumo
+
 		sumo.finish_move()
 
 	message_manager.check_scroll(
