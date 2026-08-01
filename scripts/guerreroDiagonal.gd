@@ -79,6 +79,25 @@ func move_random():
 	if moves.is_empty():
 		return
 
+	var safe_moves: Array[Vector2i] = []
+
+	for move in moves:
+
+		if !board.is_dangerous_for_enemies(move):
+
+			safe_moves.append(move)
+
+	# Si existe una casilla segura, la prefiere.
+	if !safe_moves.is_empty():
+
+		safe_moves.shuffle()
+
+		move_to(safe_moves[0])
+
+		return
+
+	# Si todas son peligrosas,
+	# vuelve al comportamiento normal.
 	moves.shuffle()
 
 	move_to(moves[0])

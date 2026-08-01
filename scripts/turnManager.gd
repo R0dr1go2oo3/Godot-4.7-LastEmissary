@@ -113,18 +113,20 @@ func end_turn():
 
 		robot.finish_turn()
 
-	turn += 1
-
-	pieces_acted.clear()
-	robot_actions = 0
-
 	# Limpia cualquier elemento que haya quedado
 	# por error en zonas destruidas.
 	board.cleanup_destroyed_cells()
 
+	# Las columnas se destruyen al FINAL
+	# del turno 4, 8, 12...
 	if turn % 4 == 0:
 
 		board.destroy_next_columns(2)
+
+	turn += 1
+
+	pieces_acted.clear()
+	robot_actions = 0
 
 	board.add_log("Comienza el turno " + str(turn) + ".")
 

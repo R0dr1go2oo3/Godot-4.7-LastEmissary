@@ -18,6 +18,9 @@ var destroyed_columns := 0
 var enemy_manager: EnemyManager
 var scroll: Scroll
 
+# Personajes vivos de la partida.
+var characters: Array[Character] = []
+
 var log_manager: LogManager
 
 
@@ -39,6 +42,11 @@ func setup(
 func setup_enemy_manager(manager: EnemyManager):
 
 	enemy_manager = manager
+
+
+func setup_characters(character_list: Array[Character]):
+
+	characters = character_list
 
 
 func setup_scroll(scroll_node: Scroll):
@@ -269,6 +277,23 @@ func get_enemy(cell: Vector2i) -> Enemy:
 		return null
 
 	return enemy_manager.get_enemy_at(cell)
+
+
+func is_dangerous_for_enemies(cell: Vector2i) -> bool:
+
+	for character in characters:
+
+		if character == null:
+			continue
+
+		if !character.alive:
+			continue
+
+		if cell in character.get_possible_moves():
+
+			return true
+
+	return false
 
 
 # =====================================

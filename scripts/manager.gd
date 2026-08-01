@@ -59,6 +59,10 @@ func setup(
 
 	characters = character_list
 
+	# Permite que la IA consulte los movimientos
+	# de todos los personajes.
+	board.setup_characters(characters)
+
 	for character in characters:
 		character.died.connect(_on_character_died)
 
