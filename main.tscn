@@ -339,6 +339,7 @@ tile_set = SubResource("TileSet_kc8pj")
 position = Vector2(-176, -288)
 
 [node name="Ninja" parent="characters" unique_id=288799154 instance=ExtResource("9_kek77")]
+texture_filter = 1
 position = Vector2(-288, -288)
 
 [node name="Sumo" parent="characters" unique_id=817593643 instance=ExtResource("10_4c57u")]

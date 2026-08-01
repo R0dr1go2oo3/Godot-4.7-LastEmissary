@@ -39,6 +39,7 @@ animations = [{
 [node name="Paladin" type="Node2D" unique_id=1405217417]
 texture_filter = 1
 script = ExtResource("1_hn4rh")
+pixels_per_second = 300.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=517448268]
 texture_filter = 1

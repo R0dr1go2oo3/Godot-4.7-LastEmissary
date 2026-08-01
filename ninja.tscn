@@ -37,6 +37,7 @@ animations = [{
 
 [node name="Ninja" type="Node2D" unique_id=288799154]
 script = ExtResource("1_25rb4")
+pixels_per_second = 1000.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=20295834]
 texture_filter = 1

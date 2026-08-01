@@ -37,6 +37,7 @@ animations = [{
 
 [node name="Sumo" type="Node2D" unique_id=817593643]
 script = ExtResource("1_xqvs0")
+pixels_per_second = 200.0
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=961527310]
 texture_filter = 1
