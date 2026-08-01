@@ -86,6 +86,22 @@ func remove_character(piece: Character):
 
 func end_turn():
 
+	# =====================================
+	# Finalizar efectos temporales
+	# =====================================
+
+	for character in characters:
+
+		if character == null:
+			continue
+
+		if !character.alive:
+			continue
+
+		# El escudo del Paladín dura
+		# hasta el inicio del siguiente turno.
+		character.protection = false
+
 	if robot != null:
 
 		if turn == next_robot_turn:

@@ -119,6 +119,51 @@ func use_show(character: Character) -> bool:
 
 
 # =====================================
+# PROTECCIÓN
+# =====================================
+
+func use_protection(paladin: Paladin) -> bool:
+
+	if !paladin.alive:
+		return false
+
+	board.add_log(
+		paladin.name + " utilizó Protección."
+	)
+
+	var protected_someone := false
+
+	for cell in get_adjacent_cells(paladin.current_cell):
+
+		var target: Character = board.get_occupant(cell)
+
+		if target == null:
+			continue
+
+		if !target.alive:
+			continue
+
+		if target == paladin:
+			continue
+
+		target.protection = true
+
+		board.add_log(
+			target.name + " recibió Protección."
+		)
+
+		protected_someone = true
+
+	if !protected_someone:
+
+		board.add_log(
+			"No había aliados adyacentes."
+		)
+
+	return true
+
+
+# =====================================
 # PORTADORES
 # =====================================
 

@@ -1,5 +1,51 @@
 extends Character
 
+class_name Paladin
+
+
+func use_protection() -> bool:
+
+	if !alive:
+		return false
+
+	var protected_someone := false
+
+	var directions: Array[Vector2i] = [
+		Vector2i.ZERO,
+		Vector2i(-1, -1),
+		Vector2i(0, -1),
+		Vector2i(1, -1),
+		Vector2i(-1, 0),
+		Vector2i(1, 0),
+		Vector2i(-1, 1),
+		Vector2i(0, 1),
+		Vector2i(1, 1)
+	]
+
+	for dir in directions:
+
+		var cell := current_cell + dir
+
+		if !board.is_inside_board(cell):
+			continue
+
+		var target := board.get_occupant(cell)
+
+		if target == null:
+			continue
+
+		if !target.alive:
+			continue
+
+		target.protection = true
+		protected_someone = true
+
+		board.add_log(
+			target.name + " recibió un escudo."
+		)
+
+	return protected_someone
+
 
 func get_possible_moves_from(
 	cell: Vector2i,

@@ -144,6 +144,10 @@ func update_hud():
 
 				text += character.name + " : Disponible"
 
+		if character.protection:
+
+			text += " | Escudo"
+
 		if character.is_carrier():
 
 			text += " | Portador"
@@ -276,6 +280,39 @@ func _unhandled_input(event: InputEvent):
 				+ str(ninja.stealth_steps_left)
 				+ " movimientos."
 			)
+
+		return
+
+	# =====================================
+	# Paladín
+	# =====================================
+
+	if selected_character is Paladin:
+
+		var paladin := selected_character as Paladin
+
+		if !turn_manager.can_act(paladin):
+			return
+
+		if !paladin.use_protection():
+
+			board.add_log(
+				"No hay aliados cercanos para proteger."
+			)
+
+			return
+
+		board.add_log(
+			"Paladín protegió a los aliados cercanos."
+		)
+
+		turn_manager.register_action(paladin)
+
+		deselect()
+
+		update_hud()
+
+		return
 
 
 func select_piece(piece: Character):

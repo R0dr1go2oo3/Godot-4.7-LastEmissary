@@ -17,6 +17,9 @@ var pixels_per_second := 350.0
 var health := 0
 var has_message := false
 
+# Protección temporal contra el siguiente golpe.
+var protection := false
+
 var board: BoardState = null
 var current_cell: Vector2i
 
@@ -36,6 +39,7 @@ func spawn(cell: Vector2i):
 	health = max_health
 	alive = true
 	has_message = false
+	protection = false
 
 	update_position()
 
@@ -131,6 +135,16 @@ func take_damage(amount: int):
 	if !alive:
 		return
 
+	if protection:
+
+		protection = false
+
+		board.add_log(
+			name + " bloqueó el ataque."
+		)
+
+		return
+
 	health -= amount
 
 	board.add_log(
@@ -162,6 +176,7 @@ func die():
 		return
 
 	alive = false
+	protection = false
 
 	drop_message()
 
