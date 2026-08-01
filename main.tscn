@@ -391,7 +391,7 @@ grow_vertical = 0
 layout_mode = 2
 
 [node name="VBoxContainerL" type="VBoxContainer" parent="HUD/PanelContainer/HBoxContainer" unique_id=262093750]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 
 [node name="actionsLabel" type="RichTextLabel" parent="HUD/PanelContainer/HBoxContainer/VBoxContainerL" unique_id=854478247]
