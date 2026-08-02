@@ -11,13 +11,34 @@ func clear_moves():
 	visible_moves.clear()
 
 
-func show_moves(cells: Array[Vector2i]):
+func show_moves(
+	selected_cell: Vector2i,
+	cells: Array[Vector2i]
+):
 
 	clear_moves()
 
+	# Resaltar la casilla del personaje.
+	set_cell(
+		selected_cell,
+		2,
+		Vector2i(0, 0),
+		0
+	)
+
+	visible_moves.append(selected_cell)
+
+	# Resaltar los movimientos.
 	for cell in cells:
 
-		# Tile ID 2
-		set_cell(cell, 2, Vector2i(0, 0), 0)
+		if cell == selected_cell:
+			continue
+
+		set_cell(
+			cell,
+			2,
+			Vector2i(0, 0),
+			0
+		)
 
 		visible_moves.append(cell)

@@ -34,6 +34,41 @@ func setup(
 	next_robot_turn = 2
 
 
+func can_select(piece: Character) -> bool:
+
+	if piece == null:
+		return false
+
+	if !piece.alive:
+		return false
+
+	# Si todavía puede actuar normalmente.
+	if can_act(piece):
+		return true
+
+	# Robot.
+	if piece is Robot:
+
+		return (piece as Robot).can_use_overload()
+
+	# Ninja.
+	if piece is Ninja:
+
+		return (piece as Ninja).can_use_stealth()
+
+	# Paladín.
+	if piece is Paladin:
+
+		return (piece as Paladin).can_use_protection()
+
+	# Sumo.
+	if piece is Sumo:
+
+		return (piece as Sumo).stomp_ready
+
+	return false
+
+
 func can_act(piece: Character) -> bool:
 
 	if piece == null:

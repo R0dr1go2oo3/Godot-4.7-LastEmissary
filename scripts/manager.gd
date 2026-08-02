@@ -229,7 +229,7 @@ func handle_click(cell: Vector2i):
 		if piece == null:
 			return
 
-		if !turn_manager.can_act(piece):
+		if !turn_manager.can_select(piece):
 			return
 
 		select_piece(piece)
@@ -242,7 +242,7 @@ func handle_click(cell: Vector2i):
 
 	if piece != null:
 
-		if !turn_manager.can_act(piece):
+		if !turn_manager.can_select(piece):
 			return
 
 		select_piece(piece)
@@ -289,9 +289,6 @@ func _unhandled_input(event: InputEvent):
 
 	if selected_character == robot:
 
-		if !turn_manager.can_act(robot):
-			return
-
 		if robot.activate_overload():
 
 			board.add_log("Robot activa Sobrecarga.")
@@ -332,9 +329,6 @@ func _unhandled_input(event: InputEvent):
 
 		var paladin := selected_character as Paladin
 
-		if !turn_manager.can_act(paladin):
-			return
-
 		if paladin.use_protection():
 
 			board.add_log(
@@ -369,9 +363,6 @@ func _unhandled_input(event: InputEvent):
 
 		var sumo := selected_character as Sumo
 
-		if !turn_manager.can_act(sumo):
-			return
-
 		if !sumo.stomp_ready:
 
 			board.add_log(
@@ -392,8 +383,7 @@ func _unhandled_input(event: InputEvent):
 			"Sumo utilizó Pisotón."
 		)
 
-		# El Pisotón consume la acción.
-		turn_manager.register_action(sumo)
+		# Temporalmente el Pisotón no consume acción.
 
 		deselect()
 
@@ -410,9 +400,21 @@ func select_piece(piece: Character):
 	selected_character = piece
 	selected_character.selected = true
 
-	moves_tile.show_moves(
-		piece.get_possible_moves()
-	)
+	if turn_manager.can_act(piece):
+
+		moves_tile.show_moves(
+			piece.current_cell,
+			piece.get_possible_moves()
+		)
+
+	else:
+
+		var empty_moves: Array[Vector2i] = []
+
+		moves_tile.show_moves(
+			piece.current_cell,
+			empty_moves
+		)
 
 	board.add_log(
 		piece.name + " seleccionado."
@@ -431,6 +433,12 @@ func deselect():
 
 
 func move_selected(cell: Vector2i):
+
+	# Si ya no puede actuar, solo puede usar habilidad.
+	if !turn_manager.can_act(selected_character):
+
+		deselect()
+		return
 
 	if !(cell in selected_character.get_possible_moves()):
 

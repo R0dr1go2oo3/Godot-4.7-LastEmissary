@@ -120,7 +120,9 @@ func get_possible_moves_from(
 			continue
 
 		# Siempre puede detenerse en la casilla intermedia.
-		moves.append(middle)
+		if middle not in moves:
+
+			moves.append(middle)
 
 		var target: Vector2i = cell + dir * 2
 
@@ -147,6 +149,10 @@ func get_possible_moves_from(
 		if board.is_destroyed(target):
 			continue
 
-		moves.append(target)
+		# Evita duplicados cuando el salto se
+		# reduce a una casilla al llegar a la meta.
+		if target not in moves:
+
+			moves.append(target)
 
 	return moves
