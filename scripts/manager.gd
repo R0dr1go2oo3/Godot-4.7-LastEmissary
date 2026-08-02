@@ -341,8 +341,6 @@ func _unhandled_input(event: InputEvent):
 				"Paladín protegió a los aliados cercanos."
 			)
 
-			turn_manager.register_action(paladin)
-
 			deselect()
 
 			update_hud()

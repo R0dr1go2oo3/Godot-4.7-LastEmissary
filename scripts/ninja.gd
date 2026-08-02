@@ -2,7 +2,7 @@ extends Character
 
 class_name Ninja
 
-const STEALTH_COOLDOWN := 5
+const STEALTH_COOLDOWN := 3
 
 # ---------------------------------
 # Sigilo
@@ -129,17 +129,12 @@ func get_possible_moves_from(
 		if !ignore_units and board.is_occupied(middle):
 			continue
 
-		# Enemigo a una casilla:
-		# puede atacarlo directamente.
-		if board.has_enemy(middle):
-
-			moves.append(middle)
+		# No puede atravesar casillas destruidas.
+		if board.is_destroyed(middle):
 			continue
 
-		# Puede recoger el pergamino antes del salto.
-		if board.has_scroll(middle):
-
-			moves.append(middle)
+		# Siempre puede detenerse en la casilla intermedia.
+		moves.append(middle)
 
 		var target: Vector2i = cell + dir * 2
 

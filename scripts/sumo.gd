@@ -3,7 +3,7 @@ extends Character
 class_name Sumo
 
 
-const STOMP_COOLDOWN := 10
+const STOMP_COOLDOWN := 5
 
 var stomp_ready := true
 var stomp_steps_left := 0

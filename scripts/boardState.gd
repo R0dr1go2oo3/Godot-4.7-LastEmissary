@@ -92,7 +92,7 @@ func create_board():
 			ground_tile.set_cell(
 				cell,
 				0,
-				Vector2i(0, 0),
+				Vector2i(randi_range(0, 31), 0),
 				0
 			)
 
@@ -421,10 +421,15 @@ func add_obstacle(cell: Vector2i):
 
 	grid[cell]["obstacle"] = true
 
+	var variants: Array[Vector2i] = [
+		Vector2i(0, 0),
+		Vector2i(1, 0)
+	]
+
 	obstacle_tile.set_cell(
 		cell,
 		3,
-		Vector2i(0, 0),
+		variants.pick_random(),
 		0
 	)
 
@@ -546,6 +551,6 @@ func can_reach_goal(character: Character) -> bool:
 func get_random_scroll_cell() -> Vector2i:
 
 	return get_random_free_cell(
-		3,
-		19
+		5,
+		15
 	)

@@ -3,7 +3,7 @@ extends Character
 class_name Paladin
 
 
-const PROTECTION_COOLDOWN := 5
+const PROTECTION_COOLDOWN := 3
 
 # Puede usar el escudo cuando la habilidad está lista.
 var protection_ready := true
@@ -115,24 +115,12 @@ func get_possible_moves_from(
 		if !ignore_units and board.is_occupied(middle):
 			continue
 
-		# =====================================
-		# ENEMIGO A 1 CASILLA
-		# Solo puede atacarlo.
-		# =====================================
-
-		if board.has_enemy(middle):
-
-			moves.append(middle)
+		# No puede atravesar casillas destruidas.
+		if board.is_destroyed(middle):
 			continue
 
-		# =====================================
-		# PERGAMINO A 1 CASILLA
-		# Puede recogerlo o saltarlo.
-		# =====================================
-
-		if board.has_scroll(middle):
-
-			moves.append(middle)
+		# Siempre puede detenerse en la casilla intermedia.
+		moves.append(middle)
 
 		var target: Vector2i = cell + dir * 2
 
