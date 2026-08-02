@@ -12,8 +12,9 @@ var characters: Array[Character] = []
 var robot_actions := 0
 var pieces_acted: Array[Character] = []
 
-# Próximo turno en el que el Robot puede actuar.
-var next_robot_turn := 2
+# Turnos restantes de recarga del Robot.
+# 0 = disponible.
+var robot_cooldown := 1
 
 
 func setup(
@@ -31,7 +32,9 @@ func setup(
 	robot_actions = 0
 	pieces_acted.clear()
 
-	next_robot_turn = 2
+	# El Robot comienza disponible
+	# en el turno 2.
+	robot_cooldown = 1
 
 
 func can_select(piece: Character) -> bool:
@@ -42,28 +45,19 @@ func can_select(piece: Character) -> bool:
 	if !piece.alive:
 		return false
 
-	# Si todavía puede actuar normalmente.
 	if can_act(piece):
 		return true
 
-	# Robot.
 	if piece is Robot:
-
 		return (piece as Robot).can_use_overload()
 
-	# Ninja.
 	if piece is Ninja:
-
 		return (piece as Ninja).can_use_stealth()
 
-	# Paladín.
 	if piece is Paladin:
-
 		return (piece as Paladin).can_use_protection()
 
-	# Sumo.
 	if piece is Sumo:
-
 		return (piece as Sumo).stomp_ready
 
 	return false
@@ -111,7 +105,6 @@ func remove_character(piece: Character):
 		return
 
 	pieces_acted.erase(piece)
-
 	characters.erase(piece)
 
 	if piece == robot:
@@ -133,27 +126,28 @@ func end_turn():
 		if !character.alive:
 			continue
 
-		# El escudo dura hasta el inicio
-		# del siguiente turno.
 		character.protection = false
 
 	if robot != null:
 
-		if turn == next_robot_turn:
+		# Si el Robot actuó este turno,
+		# comienza su recarga.
+		if robot_actions > 0:
 
 			if robot.overload_active:
-				next_robot_turn = turn + 3
+				robot_cooldown = 3
 			else:
-				next_robot_turn = turn + 2
+				robot_cooldown = 2
 
 		robot.finish_turn()
 
-	# Limpia cualquier elemento que haya quedado
-	# por error en zonas destruidas.
+	# Reduce la recarga al finalizar el turno.
+	if robot_cooldown > 0:
+
+		robot_cooldown -= 1
+
 	board.cleanup_destroyed_cells()
 
-	# Las columnas se destruyen al FINAL
-	# del turno 4, 8, 12...
 	if turn % 4 == 0:
 
 		board.destroy_next_columns(2)
@@ -172,7 +166,7 @@ func end_turn():
 
 func robot_is_recharging() -> bool:
 
-	return turn < next_robot_turn
+	return robot_cooldown > 0
 
 
 # =====================================
