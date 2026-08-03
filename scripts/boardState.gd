@@ -289,6 +289,15 @@ func is_dangerous_for_enemies(cell: Vector2i) -> bool:
 		if !character.alive:
 			continue
 
+		# Mientras el Ninja esté en Sigilo,
+		# los enemigos no consideran su amenaza.
+		if character is Ninja:
+
+			var ninja := character as Ninja
+
+			if ninja.is_hidden():
+				continue
+
 		if cell in character.get_possible_moves():
 
 			return true
