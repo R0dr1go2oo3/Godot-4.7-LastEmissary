@@ -42,6 +42,41 @@ func check_scroll(character: Character):
 		)
 
 
+func use_collect(character: Character) -> bool:
+
+	if !character.alive:
+		return false
+
+	if character.is_carrier():
+
+		board.add_log(
+			character.name + " ya es portador."
+		)
+
+		return false
+
+	for cell in get_adjacent_cells(character.current_cell):
+
+		if !board.has_scroll(cell):
+			continue
+
+		if character.pick_message():
+
+			scroll.collect()
+
+			board.add_log(
+				character.name + " recogió el pergamino."
+			)
+
+			return true
+
+	board.add_log(
+		"No hay ningún pergamino cercano."
+	)
+
+	return false
+
+
 # =====================================
 # MOSTRAR
 # =====================================
@@ -51,8 +86,10 @@ func can_use_show(character: Character) -> bool:
 	if !character.alive:
 		return false
 
+	# Si aún no es portador,
+	# siempre puede intentar recoger.
 	if !character.is_carrier():
-		return false
+		return true
 
 	for cell in get_adjacent_cells(character.current_cell):
 
@@ -78,6 +115,12 @@ func use_show(character: Character) -> bool:
 
 	if !character.alive:
 		return false
+
+	# Antes de ser portador,
+	# el botón funciona como Recoger.
+	if !character.is_carrier():
+
+		return use_collect(character)
 
 	if !character.show_message():
 		return false
