@@ -26,12 +26,26 @@ func get_attack_cells_from(
 
 	for dir in directions:
 
-		var target := cell + dir
+		for distance in range(1, 3):
 
-		if !board.is_inside_board(target):
-			continue
+			var target := cell + dir * distance
 
-		cells.append(target)
+			if !board.is_inside_board(target):
+				break
+
+			cells.append(target)
+
+			# El disparo se detiene en un obstáculo.
+			if board.has_obstacle(target):
+				break
+
+			# También se detiene en un personaje.
+			if board.is_occupied(target):
+				break
+
+			# También se detiene en un enemigo.
+			if board.has_enemy(target):
+				break
 
 	return cells
 

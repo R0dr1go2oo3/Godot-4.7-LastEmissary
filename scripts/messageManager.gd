@@ -86,11 +86,21 @@ func can_use_show(character: Character) -> bool:
 	if !character.alive:
 		return false
 
-	# Si aún no es portador,
-	# siempre puede intentar recoger.
+	# Si todavía no es portador,
+	# solo puede usar la habilidad si
+	# hay un pergamino adyacente.
 	if !character.is_carrier():
-		return true
 
+		for cell in get_adjacent_cells(character.current_cell):
+
+			if board.has_scroll(cell):
+
+				return true
+
+		return false
+
+	# Ya es portador: comprobar si hay
+	# alguien a quien transmitir el mensaje.
 	for cell in get_adjacent_cells(character.current_cell):
 
 		var target: Character = board.get_occupant(cell)
@@ -125,10 +135,6 @@ func use_show(character: Character) -> bool:
 	if !character.show_message():
 		return false
 
-	board.add_log(
-		character.name + " utilizó Mostrar."
-	)
-
 	var transmitted := false
 
 	for cell in get_adjacent_cells(character.current_cell):
@@ -146,17 +152,23 @@ func use_show(character: Character) -> bool:
 
 		if target.pick_message():
 
+			transmitted = true
+
 			board.add_log(
 				target.name + " recibió el mensaje."
 			)
-
-			transmitted = true
 
 	if !transmitted:
 
 		board.add_log(
 			"Ningún personaje recibió el mensaje."
 		)
+
+		return false
+
+	board.add_log(
+		character.name + " utilizó Mostrar."
+	)
 
 	return true
 
