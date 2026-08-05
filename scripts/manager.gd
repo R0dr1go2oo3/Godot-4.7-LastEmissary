@@ -44,8 +44,10 @@ func setup(
 
 	board = board_state
 
-	mouse_tile = mouse_layer
+	mouse_tile = mouse_layer as MouseTile
 	moves_tile = moves_layer
+
+	mouse_tile.board = board
 
 	board.setup(
 		ground_tile,
@@ -630,3 +632,8 @@ func _on_end_turn_pressed():
 	turn_manager.end_turn()
 
 	update_hud()
+
+
+func _on_reiniciar_pressed() -> void:
+
+	get_tree().reload_current_scene()
