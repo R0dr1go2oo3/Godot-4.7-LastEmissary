@@ -111,17 +111,25 @@ func get_possible_moves_from(
 		if board.has_obstacle(middle):
 			continue
 
-		# No puede atravesar personajes.
-		if !ignore_units and board.is_occupied(middle):
-			continue
-
 		# No puede atravesar casillas destruidas.
 		if board.is_destroyed(middle):
 			continue
 
-		# Siempre puede detenerse en la casilla intermedia.
-		if middle not in moves:
+		# No puede atravesar aliados.
+		if !ignore_units and board.is_occupied(middle):
+			continue
 
+		# Si hay un enemigo a una casilla,
+		# puede atacarlo pero no saltarlo.
+		if board.has_enemy(middle):
+
+			if middle not in moves:
+				moves.append(middle)
+
+			continue
+
+		# Casilla intermedia libre.
+		if middle not in moves:
 			moves.append(middle)
 
 		var target: Vector2i = cell + dir * 2
@@ -141,18 +149,25 @@ func get_possible_moves_from(
 		if board.has_obstacle(target):
 			continue
 
-		# No puede caer sobre otro personaje.
-		if !ignore_units and board.is_occupied(target):
-			continue
-
 		# No puede caer sobre casillas destruidas.
 		if board.is_destroyed(target):
 			continue
 
-		# Evita duplicados cuando el salto se
-		# reduce a una casilla al llegar a la meta.
-		if target not in moves:
+		# No puede caer sobre aliados.
+		if !ignore_units and board.is_occupied(target):
+			continue
 
+		# Si el enemigo está a dos casillas,
+		# puede caer sobre él para atacarlo.
+		if board.has_enemy(target):
+
+			if target not in moves:
+				moves.append(target)
+
+			continue
+
+		# Casilla libre.
+		if target not in moves:
 			moves.append(target)
 
 	return moves
